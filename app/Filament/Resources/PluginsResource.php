@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\PluginsResource\Pages;
 use App\Filament\Resources\PluginsResource\RelationManagers;
+use App\Models\Plugin;
 use App\Models\Plugins;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -15,7 +16,7 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class PluginsResource extends Resource
 {
-    protected static ?string $model = Plugins::class;
+    protected static ?string $model = Plugin::class;
     protected static ?string $navigationIcon = 'heroicon-o-cog';
     protected static ?string $navigationGroup = 'Gateway Manager';
 

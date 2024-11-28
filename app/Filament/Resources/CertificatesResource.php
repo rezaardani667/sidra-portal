@@ -28,36 +28,49 @@ class CertificatesResource extends Resource
     public static function form(Form $form): Form
     {
         return $form
-            ->schema([
-                Section::make('SSL Key Pair')
-                    ->description('The PEM-encoded public certificate chain and private 
-                                    key of the SSL key pair and the alternate.')
-                    ->schema([
-                        Textarea::make('cert')
-                    ->label('Cert')
-                    ->required(),
-                
-                Textarea::make('key')
-                    ->label('Key')
-                    ->required(),
+        ->schema([
+            Section::make('New Certificate')
+                ->description('Certificates handle SSL/TLS termination for encrypted requests.')
+                ->schema([
+                    Section::make('SSL Key Pair')
+                        ->description('The PEM-encoded public certificate chain and private 
+                                        key of the SSL key pair and the alternate.')
+                        ->schema([
+                            Textarea::make('cert')
+                        ->label('Cert')
+                        ->required()
+                        ->rows(6),
+            
+            Textarea::make('key')
+                ->label('Key')
+                ->required()
+                ->rows(6),
 
-                Textarea::make('cert_alt')
-                    ->label('Cert Alt'),
+            Textarea::make('cert_alt')
+                ->label('Cert Alt')
+                ->rows(6),
 
-                Textarea::make('key_alt')
-                    ->label('Key Alt'),
+            Textarea::make('key_alt')
+                ->label('Key Alt')
+                ->rows(6),
 
-                TextInput::make('snis')
-                    ->label('SNIs')
-                    ->placeholder('Enter a SNI'),
-                
-                TextInput::make('tags')
-                    ->label('Tags')
-                    ->placeholder('Enter a list of tags separated by comma')
-                    ->helperText('e.g. tag1, tag2, tag3')
-                    ]),
-                
-            ]);
+            TextInput::make('snis')
+                ->label('SNIs')
+                ->placeholder('Enter a SNI'),
+                ]),
+            
+            Section::make('General Information')
+                ->description('General information will help identify and manage this key.')
+                ->schema([
+                    TextInput::make('tags')
+                        ->label('Tags')
+                        ->placeholder('Enter a list of tags separated by comma')
+                        ->helperText('e.g. tag1, tag2, tag3')
+                ])
+                ]),
+            
+            
+        ]);
     }
 
     public static function table(Table $table): Table

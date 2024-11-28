@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\RoutesResource\Pages;
 use App\Filament\Resources\RoutesResource\RelationManagers;
+use App\Models\Route;
 use App\Models\Routes;
 use Filament\Forms;
 use Filament\Forms\Components\Repeater;
@@ -19,7 +20,7 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class RoutesResource extends Resource
 {
-    protected static ?string $model = Routes::class;
+    protected static ?string $model = Route::class;
     protected static ?string $navigationIcon = 'heroicon-o-map';
     protected static ?string $navigationGroup = 'Gateway Manager';
 
@@ -31,10 +32,15 @@ class RoutesResource extends Resource
                     ->label('Name')
                     ->required()
                     ->placeholder('Enter a unique name'),
-                TextInput::make('service')
+                Select::make('service')
                     ->label('Service')
                     ->required()
-                    ->placeholder('Select a service'),
+                    ->placeholder('Select a service')
+                    ->options(
+                        \App\Models\Service::all()->mapWithKeys(function ($service) {
+                            return [$service->id => "{$service->name} - {$service->id}"];
+                        })->toArray()
+                    ),
                 TextInput::make('tags')
                     ->label('Tags')
                     ->required()
@@ -48,15 +54,15 @@ class RoutesResource extends Resource
                     ])
                     ->multiple()
                     ->required(),
-                Repeater::make('paths')
-                        ->label('HTTP / HTTPS Routing Rules')
-                        ->schema([
-                            TextInput::make('path')
-                                ->label('Paths')
-                                ->placeholder('Enter a paths')
-                                ->required(),
-                        ])
-                        ->createButtonLabel('Add Path')
+                // Repeater::make('paths')
+                //         ->label('HTTP / HTTPS Routing Rules')
+                //         ->schema([
+                //             TextInput::make('path')
+                //                 ->label('Paths')
+                //                 ->placeholder('Enter a paths')
+                //                 ->required(),
+                //         ])
+                //         ->createButtonLabel('Add Path')
             ]);
     }
 
