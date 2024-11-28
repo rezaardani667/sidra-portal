@@ -25,6 +25,7 @@ class UpstreamsResource extends Resource
     protected static ?string $model = Upstreams::class;
     protected static ?string $navigationIcon = 'heroicon-o-arrow-up';
     protected static ?string $navigationGroup = 'Gateway Manager';
+    protected static ?int $navigationSort =  7;
 
     public static function form(Form $form): Form
     {
@@ -37,7 +38,7 @@ class UpstreamsResource extends Resource
                     ->label('Name')
                     ->placeholder('Enter or select a host')
                     ->required(),
-                
+
                 TextInput::make('host_header')
                     ->label('Host Header')
                     ->required(),

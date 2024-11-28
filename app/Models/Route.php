@@ -11,7 +11,7 @@ class Route extends Model
     use HasFactory;
     use HasUuids;
 
-    protected $filable = ['name', 'service', 'tags'];
+    protected $fillable = ['name'];
 
     public function service()
     {

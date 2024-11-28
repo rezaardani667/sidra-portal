@@ -8,12 +8,15 @@ use App\Models\Route;
 use App\Models\Routes;
 use Filament\Forms;
 use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Tabs;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -21,48 +24,62 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 class RoutesResource extends Resource
 {
     protected static ?string $model = Route::class;
-    protected static ?string $navigationIcon = 'heroicon-o-map';
+
     protected static ?string $navigationGroup = 'Gateway Manager';
+    protected static ?string $navigationIcon = 'heroicon-o-map';
+
+    protected static ?int $navigationSort =  4;
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                TextInput::make('name')
-                    ->label('Name')
-                    ->required()
-                    ->placeholder('Enter a unique name'),
-                Select::make('service')
-                    ->label('Service')
-                    ->required()
-                    ->placeholder('Select a service')
-                    ->options(
-                        \App\Models\Service::all()->mapWithKeys(function ($service) {
-                            return [$service->id => "{$service->name} - {$service->id}"];
-                        })->toArray()
-                    ),
-                TextInput::make('tags')
-                    ->label('Tags')
-                    ->required()
-                    ->placeholder('Enter a list of tags separated by commas'),
-                Select::make('protocols')
-                    ->label('Protocols')
-                    ->options([
-                        'HTTP' => 'HTTP',
-                        'HTTPS' => 'HTTPS',
-                        'HTTP,HTTPS' => 'HTTP,HTTPS'
-                    ])
-                    ->multiple()
-                    ->required(),
-                // Repeater::make('paths')
-                //         ->label('HTTP / HTTPS Routing Rules')
-                //         ->schema([
-                //             TextInput::make('path')
-                //                 ->label('Paths')
-                //                 ->placeholder('Enter a paths')
-                //                 ->required(),
-                //         ])
-                //         ->createButtonLabel('Add Path')
+                Section::make('General Information')
+                    ->description('General information will help you identify and manage this route')
+                    ->aside()
+                    ->schema([
+                        TextInput::make('name')
+                            ->label('Name')
+                            ->required()
+                            ->placeholder('Enter a unique name'),
+                        Select::make('service')
+                            ->label('Service')
+                            ->required()
+                            ->placeholder('Select a service')
+                            ->options(
+                                \App\Models\Service::all()->mapWithKeys(function ($service) {
+                                    return [$service->id => "{$service->name} - {$service->id}"];
+                                })->toArray()
+                            ),
+                        TextInput::make('tags')
+                            ->label('Tags')
+                            ->required()
+                            ->placeholder('Enter a list of tags separated by commas'),
+                    ]),
+                Section::make('Route Configuration')
+                    ->description('Route configuration determines how this route will handle incoming requests')
+                    ->aside()
+                    ->schema([
+                        Select::make('protocols')
+                            ->label('Protocols')
+                            ->options([
+                                'HTTP' => 'HTTP',
+                                'HTTPS' => 'HTTPS',
+                                'HTTP,HTTPS' => 'HTTP,HTTPS'
+                            ])
+                            ->required(),
+                        Tabs::make('Tabs')
+                            ->tabs([
+                                Tabs\Tab::make('Traditional')
+                                    ->schema([
+                                        // ...
+                                    ]),
+                                Tabs\Tab::make('Expressions')
+                                    ->schema([
+                                        // ...
+                                    ]),
+                            ])
+                    ]),
             ]);
     }
 
@@ -72,14 +89,22 @@ class RoutesResource extends Resource
             ->columns([
                 TextColumn::make('name')
                     ->label('Name'),
-                TextColumn::make('service')
-                    ->label('Service'),
-                TextColumn::make('tags')
-                    ->label('Tags'),
-                TextColumn::make('protocols')
+                TextColumn::make('protocol')
                     ->label('Protocols'),
+                TextColumn::make('host')
+                    ->label('Hosts'),
+                TextColumn::make('methods')
+                    ->label('Methods'),
                 TextColumn::make('path')
-                    ->label('Path')
+                    ->label('Paths'),
+                TextColumn::make('expression')
+                    ->label('Expression'),
+                TextColumn::make('tags')
+                    ->label('Tags')
+                    ->badge(),
+                TextColumn::make('updated_at')
+                    ->label('Last Modified')
+                    ->dateTime('M d, Y, h:i A')
             ])
             ->filters([
                 //

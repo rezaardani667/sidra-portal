@@ -21,6 +21,7 @@ class KeysResource extends Resource
     protected static ?string $model = Keys::class;
     protected static ?string $navigationIcon = 'heroicon-o-key';
     protected static ?string $navigationGroup = 'Gateway Manager';
+    protected static ?int $navigationSort =  11;
 
     public static function form(Form $form): Form
     {

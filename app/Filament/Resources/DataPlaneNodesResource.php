@@ -18,7 +18,7 @@ class DataPlaneNodesResource extends Resource
     protected static ?string $model = DataPlaneNodes::class;
     protected static ?string $navigationIcon = 'heroicon-o-globe-alt';
     protected static ?string $navigationGroup = 'Gateway Manager';
-    protected static ?int $navigationSort = 1;
+    protected static ?int $navigationSort = 2;
 
 
     public static function form(Form $form): Form

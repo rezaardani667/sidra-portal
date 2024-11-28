@@ -10,10 +10,11 @@ class EditRoutes extends EditRecord
 {
     protected static string $resource = RoutesResource::class;
 
+    protected static ?string $title = 'Edit Route';
+    protected ?string $subheading = 'A Route defines rules to match client requests, and is associated with a Gateway Service.';
+
     protected function getHeaderActions(): array
     {
-        return [
-            Actions\DeleteAction::make(),
-        ];
+        return [];
     }
 }

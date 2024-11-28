@@ -23,6 +23,7 @@ class ConsumersResource extends Resource
     protected static ?string $model = Consumers::class;
     protected static ?string $navigationIcon = 'heroicon-o-tag';
     protected static ?string $navigationGroup = 'Gateway Manager';
+    protected static ?int $navigationSort =  5;
 
     public static function form(Form $form): Form
     {

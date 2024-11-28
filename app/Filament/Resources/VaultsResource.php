@@ -22,6 +22,7 @@ class VaultsResource extends Resource
     protected static ?string $model = Vaults::class;
     protected static ?string $navigationIcon = 'heroicon-o-square-3-stack-3d';
     protected static ?string $navigationGroup = 'Gateway Manager';
+    protected static ?int $navigationSort =  10;
 
     public static function form(Form $form): Form
     {

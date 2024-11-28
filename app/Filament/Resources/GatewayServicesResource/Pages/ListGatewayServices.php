@@ -9,11 +9,13 @@ use Filament\Resources\Pages\ListRecords;
 class ListGatewayServices extends ListRecords
 {
     protected static string $resource = GatewayServicesResource::class;
+    protected static ?string $title = 'Gateway Service';
 
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make(),
+            Actions\CreateAction::make()
+            ->label("New Gateway Service"),
         ];
     }
 }

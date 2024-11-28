@@ -18,7 +18,7 @@ class OverviewResource extends Resource
     protected static ?string $model = Overview::class;
     protected static ?string $navigationIcon = 'heroicon-o-eye';
     protected static ?string $navigationGroup = 'Gateway Manager';
-    protected static ?int $navigationshort = 0;
+    protected static ?int $navigationSort =  1;
 
 
     public static function form(Form $form): Form

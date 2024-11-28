@@ -24,6 +24,8 @@ class SNIsResource extends Resource
     protected static ?string $model = SNIs::class;
     protected static ?string $navigationIcon = 'heroicon-o-lock-closed';
     protected static ?string $navigationGroup = 'Gateway Manager';
+    protected static ?int $navigationSort =  9;
+    protected static ?string $navigationLabel = 'SNIs';
 
     public static function form(Form $form): Form
     {

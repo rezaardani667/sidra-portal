@@ -24,6 +24,7 @@ class CertificatesResource extends Resource
     protected static ?string $model = Certificates::class;
     protected static ?string $navigationIcon = 'heroicon-o-document-text';
     protected static ?string $navigationGroup = 'Gateway Manager';
+    protected static ?int $navigationSort =  8;
 
     public static function form(Form $form): Form
     {
@@ -33,14 +34,14 @@ class CertificatesResource extends Resource
                 ->description('Certificates handle SSL/TLS termination for encrypted requests.')
                 ->schema([
                     Section::make('SSL Key Pair')
-                        ->description('The PEM-encoded public certificate chain and private 
+                        ->description('The PEM-encoded public certificate chain and private
                                         key of the SSL key pair and the alternate.')
                         ->schema([
                             Textarea::make('cert')
                         ->label('Cert')
                         ->required()
                         ->rows(6),
-            
+
             Textarea::make('key')
                 ->label('Key')
                 ->required()
@@ -58,7 +59,7 @@ class CertificatesResource extends Resource
                 ->label('SNIs')
                 ->placeholder('Enter a SNI'),
                 ]),
-            
+
             Section::make('General Information')
                 ->description('General information will help identify and manage this key.')
                 ->schema([
@@ -68,8 +69,8 @@ class CertificatesResource extends Resource
                         ->helperText('e.g. tag1, tag2, tag3')
                 ])
                 ]),
-            
-            
+
+
         ]);
     }
 
