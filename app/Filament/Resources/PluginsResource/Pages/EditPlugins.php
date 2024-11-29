@@ -9,6 +9,7 @@ use Filament\Resources\Pages\EditRecord;
 class EditPlugins extends EditRecord
 {
     protected static string $resource = PluginsResource::class;
+    protected static ?string $title = 'Configure plugin: key authentication';
 
     protected function getHeaderActions(): array
     {

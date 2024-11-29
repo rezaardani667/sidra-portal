@@ -20,7 +20,7 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 class PluginsResource extends Resource
 {
     protected static ?string $model = Plugin::class;
-    protected static ?string $navigationIcon = 'heroicon-o-cog';
+    protected static ?string $navigationIcon = 'heroicon-o-puzzle-piece';
     protected static ?string $navigationGroup = 'Gateway Manager';
     protected static ?int $navigationSort =  6;
 
@@ -59,7 +59,16 @@ class PluginsResource extends Resource
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
+            ])
+            ->emptyStateHeading('Configure a New Plugin')
+            ->emptyStateDescription('Plugins are used to extend Kong functionality.')
+            ->emptyStateIcon('heroicon-o-puzzle-piece')
+            ->emptyStateActions([
+                Tables\Actions\Action::make('create')
+                    ->url(fn (): string => PluginsResource::getUrl('create'))
+                    ->label('New Plugin'),
             ]);
+
     }
 
     public static function getRelations(): array

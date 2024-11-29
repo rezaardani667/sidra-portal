@@ -26,7 +26,7 @@ class GatewayServicesResource extends Resource
     protected static ?int $navigationSort =  3;
 
     protected static ?string $navigationGroup = 'Gateway Manager';
-    protected static ?string $navigationIcon = 'heroicon-o-shield-check';
+    protected static ?string $navigationIcon = 'heroicon-o-server-stack';
     protected static ?string $navigationLabel = 'Gateway Services';
 
     public static function form(Form $form): Form
@@ -103,6 +103,14 @@ class GatewayServicesResource extends Resource
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
+            ])
+            ->emptyStateHeading('Configure a New Gateway Service')
+            ->emptyStateDescription('Gateway services are used to proxy traffic.')
+            ->emptyStateIcon('heroicon-o-server-stack')
+            ->emptyStateActions([
+                Tables\Actions\Action::make('create')
+                    ->url(fn (): string => GatewayServicesResource::getUrl('create'))
+                    ->label('New Gateway Service'),
             ]);
     }
 

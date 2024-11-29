@@ -16,10 +16,11 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 class DataPlaneNodesResource extends Resource
 {
     protected static ?string $model = DataPlaneNodes::class;
-    protected static ?string $navigationIcon = 'heroicon-o-globe-alt';
-    protected static ?string $navigationGroup = 'Gateway Manager';
+
     protected static ?int $navigationSort = 2;
 
+    protected static ?string $navigationIcon = 'heroicon-o-inbox-stack';
+    protected static ?string $navigationGroup = 'Gateway Manager';
 
     public static function form(Form $form): Form
     {
@@ -45,6 +46,14 @@ class DataPlaneNodesResource extends Resource
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
+            ])
+            ->emptyStateHeading('Self-Managed Hybrid Data Plane Nodes')
+            ->emptyStateDescription('Use Konnect with a self-hosted gateway in a hybrid configuration.')
+            ->emptyStateIcon('heroicon-o-inbox-stack')
+            ->emptyStateActions([
+                Tables\Actions\Action::make('create')
+                    ->url(fn (): string => DataPlaneNodesResource::getUrl('create'))
+                    ->label('New DataPlaneNodes'),
             ]);
     }
 

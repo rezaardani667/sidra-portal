@@ -25,10 +25,10 @@ class RoutesResource extends Resource
 {
     protected static ?string $model = Route::class;
 
-    protected static ?string $navigationGroup = 'Gateway Manager';
-    protected static ?string $navigationIcon = 'heroicon-o-map';
-
     protected static ?int $navigationSort =  4;
+
+    protected static ?string $navigationGroup = 'Gateway Manager';
+    protected static ?string $navigationIcon = 'heroicon-o-globe-alt';
 
     public static function form(Form $form): Form
     {
@@ -116,6 +116,14 @@ class RoutesResource extends Resource
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
+            ])
+            ->emptyStateHeading('Configure a New Route')
+            ->emptyStateDescription('Routes proxy requests to an associated Service.')
+            ->emptyStateIcon('heroicon-o-globe-alt')
+            ->emptyStateActions([
+                Tables\Actions\Action::make('create')
+                    ->url(fn (): string => RoutesResource::getUrl('create'))
+                    ->label('New Route'),
             ]);
     }
 

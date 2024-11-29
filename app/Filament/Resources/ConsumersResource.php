@@ -22,9 +22,11 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 class ConsumersResource extends Resource
 {
     protected static ?string $model = Consumer::class;
-    protected static ?string $navigationIcon = 'heroicon-o-tag';
-    protected static ?string $navigationGroup = 'Gateway Manager';
+
     protected static ?int $navigationSort =  5;
+
+    protected static ?string $navigationGroup = 'Gateway Manager';
+    protected static ?string $navigationIcon = 'heroicon-o-user-group';
 
     public static function form(Form $form): Form
     {
@@ -79,6 +81,14 @@ class ConsumersResource extends Resource
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
+            ])
+            ->emptyStateHeading('Configure a New Consumer')
+            ->emptyStateDescription('Consumers are the end users of a service.')
+            ->emptyStateIcon('heroicon-o-user-group')
+            ->emptyStateActions([
+                Tables\Actions\Action::make('create')
+                    ->url(fn (): string => ConsumersResource::getUrl('create'))
+                    ->label('New Consumer'),
             ]);
     }
 

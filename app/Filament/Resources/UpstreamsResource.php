@@ -25,7 +25,7 @@ use function Laravel\Prompts\select;
 class UpstreamsResource extends Resource
 {
     protected static ?string $model = Upstream::class;
-    protected static ?string $navigationIcon = 'heroicon-o-arrow-up';
+    protected static ?string $navigationIcon = 'heroicon-o-cloud-arrow-up';
     protected static ?string $navigationGroup = 'Gateway Manager';
     protected static ?int $navigationSort =  7;
 
@@ -159,6 +159,14 @@ class UpstreamsResource extends Resource
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
+            ])
+            ->emptyStateHeading('Configure a New Upstream')
+            ->emptyStateDescription('Upstreams are used to load balance incoming requests.')
+            ->emptyStateIcon('heroicon-o-cloud-arrow-up')
+            ->emptyStateActions([
+                Tables\Actions\Action::make('create')
+                    ->url(fn (): string => UpstreamsResource::getUrl('create'))
+                    ->label('New Upstream'),
             ]);
     }
 
