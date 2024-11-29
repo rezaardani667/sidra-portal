@@ -9,11 +9,11 @@ use Filament\Resources\Pages\EditRecord;
 class EditConsumers extends EditRecord
 {
     protected static string $resource = ConsumersResource::class;
+    protected static ?string $title = 'New Consumer';
+    protected ?string $subheading = 'A Consumer represents a User of a Service.';
 
     protected function getHeaderActions(): array
     {
-        return [
-            Actions\DeleteAction::make(),
-        ];
+        return [];
     }
 }

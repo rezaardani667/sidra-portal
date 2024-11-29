@@ -7,9 +7,12 @@ use App\Filament\Resources\PluginsResource\RelationManagers;
 use App\Models\Plugin;
 use App\Models\Plugins;
 use Filament\Forms;
+use Filament\Forms\Components\Toggle;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -33,7 +36,18 @@ class PluginsResource extends Resource
     {
         return $table
             ->columns([
-                //
+                TextColumn::make('name')
+                    ->label('Name'),
+                TextColumn::make('plugins')
+                    ->label('Plugin'),
+                TextColumn::make('applied_to')
+                    ->label('Applied To'),
+                ToggleColumn::make('enabled')
+                    ->label('Enabled'),
+                TextColumn::make('ordering')
+                    ->label('Ordering'),
+                TextColumn::make('tags')
+                    ->label('Tags')
             ])
             ->filters([
                 //

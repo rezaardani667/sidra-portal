@@ -4,6 +4,7 @@ namespace App\Filament\Resources\PluginsResource\Pages;
 
 use App\Filament\Resources\PluginsResource;
 use Filament\Actions;
+use Filament\Actions\Action;
 use Filament\Resources\Pages\CreateRecord;
 
 class CreatePlugins extends CreateRecord

@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\ConsumersResource\Pages;
 use App\Filament\Resources\ConsumersResource\RelationManagers;
+use App\Models\Consumer;
 use App\Models\Consumers;
 use Filament\Forms;
 use Filament\Forms\Components\Placeholder;
@@ -20,7 +21,7 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class ConsumersResource extends Resource
 {
-    protected static ?string $model = Consumers::class;
+    protected static ?string $model = Consumer::class;
     protected static ?string $navigationIcon = 'heroicon-o-tag';
     protected static ?string $navigationGroup = 'Gateway Manager';
     protected static ?int $navigationSort =  5;
@@ -30,12 +31,14 @@ class ConsumersResource extends Resource
         return $form
             ->schema([
                 Section::make('General Information')
-                    ->description('General information will help identify and manage added consumer.'),
+                    ->description('General information will help identify and manage added consumer.')
+                    ->aside()
+                    ->schema([
 
                 Section::make('Consumer Identification')
                     ->description('A consumer can have both unique username and unique custom ID or one of them.')
                     ->schema([
-                        TextInput::make('username')
+                        TextInput::make('name')
                             ->label('Username')
                             ->placeholder('Enter a unique username')
                             ->required(),
@@ -43,14 +46,15 @@ class ConsumersResource extends Resource
                         TextInput::make('custom_id')
                             ->label('Custom ID')
                             ->placeholder('Enter a unique custom ID')
-                            ->required(),
+                            ->required()
+                    ]),
 
-                        TagsInput::make('tags')
+                        TextInput::make('tags')
                             ->label('Tags')
                             ->placeholder('Enter a list of tags separated by comma')
                             ->helperText('e.g. tag1, tag2, tag3')
                             ->required(),
-                    ])
+                    ]),
             ]);
     }
 
@@ -58,7 +62,7 @@ class ConsumersResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('username')
+                TextColumn::make('name')
                     ->label('Username'),
                 TextColumn::make('custom_id')
                     ->label('Custom ID'),
