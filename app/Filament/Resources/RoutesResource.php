@@ -122,7 +122,7 @@ class RoutesResource extends Resource
             ->emptyStateIcon('heroicon-o-globe-alt')
             ->emptyStateActions([
                 Tables\Actions\Action::make('create')
-                    ->url(fn (): string => RoutesResource::getUrl('create'))
+                    ->url(fn(): string => RoutesResource::getUrl('create'))
                     ->label('New Route'),
             ]);
     }

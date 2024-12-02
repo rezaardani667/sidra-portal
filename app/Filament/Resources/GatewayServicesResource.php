@@ -7,6 +7,7 @@ use App\Filament\Resources\GatewayServicesResource\RelationManagers;
 use App\Models\GatewayServices;
 use App\Models\Service;
 use Filament\Forms;
+use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\Radio;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\TextInput;
@@ -57,16 +58,47 @@ class GatewayServicesResource extends Resource
                                 'Full URL' => 'Full URL',
                                 'Protocol,Host,Port and Path' => 'Protocol,Host,Port and Path',
                             ])
-                            ->required()
+                            ->required(),
+                        Section::make('View Advanced Fields')
                             ->schema([
-                                TextInput::make('upstream_url')
-                                    ->label('Upstream URL')
-                                    ->placeholder('Enter a URL')
-                                    ->hidden(fn(callable $get) => $get('traffic_option') !== 'upstream_url')
-                                    ->required()
-                                    ->helperText('Protocol, Host, Port and Path')
+                                TextInput::make('retries')
+                                    ->label('Retries')
+                                    ->hintIcon('heroicon-m-question-mark-circle')
+                                    ->hintIconTooltip('The number of retries to execute upon failure to proxy.')
+                                    ->default('5'),
+                                TextInput::make('connection_timeout')
+                                    ->label('Connection Timeout')
+                                    ->hintIcon('heroicon-m-question-mark-circle')
+                                    ->hintIconTooltip('The timeout in milliseconds for establishing a connection to the upstream server.')
+                                    ->default('60000'),
+                                TextInput::make('write_timeout')
+                                    ->label('Write Timeout')
+                                    ->hintIcon('heroicon-m-question-mark-circle')
+                                    ->hintIconTooltip('The timeout in milliseconds between two successive write operations for transmitting a request to the upstream server.')
+                                    ->default('60000'),
+                                TextInput::make('read_timeout')
+                                    ->label('Read Timeout')
+                                    ->hintIcon('heroicon-m-question-mark-circle')
+                                    ->hintIconTooltip('The timeout in milliseconds between two successive read operations for transmitting a request to the upstream server.')
+                                    ->default('60000'),
+                                TextInput::make('client_certificate')
+                                    ->label('Client Certificate')
+                                    ->hintIcon('heroicon-m-question-mark-circle')
+                                    ->hintIconTooltip('Certificate to be used as client certificate while TLS handshaking to the upstream server.')
+                                    ->placeholder('Enter a Certificate ID'),
+                                TextInput::make('ca_certificates')
+                                    ->label('CA Certificates')
+                                    ->hintIcon('heroicon-m-question-mark-circle')
+                                    ->hintIconTooltip("Array of CA Certificate object UUIDs that are used to build the trust store while verifying upstream server's TLS certificate. If set to null when Nginx default is respected. If default CA list in Nginx are not specified and TLS verification is enabled, then handshake with upstream server will always fail (because no CA are trusted).")
+                                    ->placeholder('Enter a comma separated list of CA Certificate IDs'),
+                                Checkbox::make('tls_verify')
+                                    ->label('TLS Verify')
+                                    ->hintIcon('heroicon-m-question-mark-circle')
+                                    ->hintIconTooltip('Whether to enable verification of upstream server TLS certificate. If set to null, then the Nginx default is respected.'),
+
                             ])
-                    ])
+                            ->collapsed()
+                    ]),
             ]);
     }
 
@@ -109,7 +141,7 @@ class GatewayServicesResource extends Resource
             ->emptyStateIcon('heroicon-o-server-stack')
             ->emptyStateActions([
                 Tables\Actions\Action::make('create')
-                    ->url(fn (): string => GatewayServicesResource::getUrl('create'))
+                    ->url(fn(): string => GatewayServicesResource::getUrl('create'))
                     ->label('New Gateway Service'),
             ]);
     }
