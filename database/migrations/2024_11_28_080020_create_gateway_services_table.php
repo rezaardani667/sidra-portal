@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('path')->nullable();
             $table->integer('port')->nullable();
             $table->text('public_key')->nullable();
+            $table->text('private_key')->nullable();
             $table->timestamps();
         });
     }

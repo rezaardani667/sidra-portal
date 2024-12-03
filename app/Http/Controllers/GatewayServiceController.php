@@ -20,8 +20,15 @@ class GatewayServiceController extends Controller
             ], 400);
         }
 
+        if($existingRecord->public_key) {
+            return response()->json([
+                'PrivateKey' => $existingRecord->private_key
+            ]);
+        }
+
         $keys = $this->generateKeyPair();
 
+        $existingRecord->private_key= $keys['private_key'];
         $existingRecord->public_key = $keys['public_key'];
         $existingRecord->save();
 
