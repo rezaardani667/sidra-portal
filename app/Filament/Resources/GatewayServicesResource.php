@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\GatewayServicesResource\Pages;
 use App\Filament\Resources\GatewayServicesResource\RelationManagers;
+use App\Models\GatewayService;
 use App\Models\GatewayServices;
 use App\Models\Service;
 use Filament\Forms;
@@ -22,7 +23,7 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class GatewayServicesResource extends Resource
 {
-    protected static ?string $model = Service::class;
+    protected static ?string $model = GatewayService::class;
 
     protected static ?int $navigationSort =  3;
 

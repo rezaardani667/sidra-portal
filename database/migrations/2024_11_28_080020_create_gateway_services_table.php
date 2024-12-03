@@ -11,10 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('services', function (Blueprint $table) {
+        Schema::create('gateway_services', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->string('name')->nullable();
-            $table->string('tags');
+            $table->string('tags')->nullable();
+            $table->string('upstream_url')->nullable();
+            $table->string('protocol')->nullable();
+            $table->string('host')->nullable();
+            $table->string('path')->nullable();
+            $table->integer('port')->nullable();
+            $table->text('public_key')->nullable();
             $table->timestamps();
         });
     }
@@ -24,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('services');
+        Schema::dropIfExists('gateway_services');
     }
 };

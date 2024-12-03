@@ -38,16 +38,16 @@ class RoutesResource extends Resource
                     ->description('General information will help you identify and manage this route')
                     ->aside()
                     ->schema([
-                        TextInput::make('name')
+                        TextInput::make('username')
                             ->label('Name')
                             ->required()
                             ->placeholder('Enter a unique name'),
-                        Select::make('service')
+                        Select::make('gateway_id')
                             ->label('Service')
                             ->required()
                             ->placeholder('Select a service')
                             ->options(
-                                \App\Models\Service::all()->mapWithKeys(function ($service) {
+                                \App\Models\GatewayService::all()->mapWithKeys(function ($service) {
                                     return [$service->id => "{$service->name} - {$service->id}"];
                                 })->toArray()
                             ),
@@ -60,7 +60,7 @@ class RoutesResource extends Resource
                     ->description('Route configuration determines how this route will handle incoming requests')
                     ->aside()
                     ->schema([
-                        Select::make('protocols')
+                        Select::make('protocol')
                             ->label('Protocols')
                             ->options([
                                 'HTTP' => 'HTTP',

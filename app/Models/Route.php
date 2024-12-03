@@ -11,11 +11,25 @@ class Route extends Model
     use HasFactory;
     use HasUuids;
 
-    protected $fillable = ['name'];
+    protected $table = 'routes';
 
-    public function service()
+    protected $fillable = [
+        'name',
+        'tags',
+        'protocol',
+        'host',
+        'methods',
+        'path',
+        'expression',
+        'gateway_id',
+    ];
+
+    /**
+     * Relasi dengan tabel GatewayService
+     */
+    public function gatewayService()
     {
-        return $this->hasMany(Service::class);
+        return $this->belongsTo(GatewayService::class, 'gateway_id');
     }
 
 }

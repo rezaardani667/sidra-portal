@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\GatewayConfigController;
+use App\Http\Controllers\GatewayServiceController;
+use App\Models\GatewayService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -16,4 +19,9 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
+});
+
+Route::prefix('v1')->group(function () {
+    Route::get('/config/{gateway_id}', [GatewayConfigController::class, 'show']);
+    Route::post('/gateway-service/register', [GatewayServiceController::class, 'register']);
 });
