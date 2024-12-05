@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('host')->nullable();
             $table->string('methods')->nullable();
             $table->string('path')->nullable();
-            $table->text('expression')->nullable()->default("-");
+            $table->text('expression')->nullable();
             $table->timestamps();
 
             $table->foreign('gateway_id')->references('id')->on('gateway_services')->onDelete('cascade');
