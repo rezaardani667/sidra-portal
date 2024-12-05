@@ -38,7 +38,7 @@ class RoutesResource extends Resource
                     ->description('General information will help you identify and manage this route')
                     ->aside()
                     ->schema([
-                        TextInput::make('username')
+                        TextInput::make('name')
                             ->label('Name')
                             ->required()
                             ->placeholder('Enter a unique name'),

@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('host')->nullable();
             $table->string('path')->nullable();
             $table->integer('port')->nullable();
+            $table->boolean('enabled')->default(true);
             $table->text('public_key')->nullable();
             $table->text('private_key')->nullable();
             $table->timestamps();

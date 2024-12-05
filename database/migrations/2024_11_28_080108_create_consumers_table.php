@@ -14,14 +14,12 @@ return new class extends Migration
         Schema::create('consumers', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->uuid('gateway_id');
-            $table->uuid('plugin_id')->nullable();
             $table->string('username')->nullable();
             $table->string('custom_id')->nullable();
             $table->string('tags')->nullable();
             $table->timestamps();
 
             $table->foreign('gateway_id')->references('id')->on('gateway_services')->onDelete('cascade');
-            $table->foreign('plugin_id')->references('id')->on('plugins')->onDelete('cascade');
         });
     }
 
