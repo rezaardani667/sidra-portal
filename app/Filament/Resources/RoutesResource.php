@@ -6,14 +6,21 @@ use App\Filament\Resources\RoutesResource\Pages;
 use App\Filament\Resources\RoutesResource\RelationManagers;
 use App\Models\Route;
 use App\Models\Routes;
+use Doctrine\DBAL\Schema\Schema;
 use Filament\Forms;
+use Filament\Forms\Components\CheckboxList;
+use Filament\Forms\Components\Radio;
 use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Tabs;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
 use Filament\Forms\Form;
+use Filament\Forms\Get;
 use Filament\Resources\Resource;
+use Filament\Support\Enums\Alignment;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ToggleColumn;
@@ -72,11 +79,115 @@ class RoutesResource extends Resource
                             ->tabs([
                                 Tabs\Tab::make('Traditional')
                                     ->schema([
-                                        // ...
+                                        Radio::make('routing')
+                                            ->label('Choose how and where to send traffic')
+                                            ->options([
+                                                'hosts' => 'Hosts',
+                                                'methods' => 'Methods',
+                                                'paths' => 'Paths',
+                                                'headers' => 'Headers',
+                                                'snis' => 'SNIs',
+                                            ])
+                                            ->reactive()
+                                            ->required(),
+                                        Select::make('routing')
+                                            ->options([
+                                                'hosts' => 'Hosts',
+                                                'methods' => 'Methods',
+                                                'paths' => 'Paths',
+                                                'headers' => 'Headers',
+                                                'snis' => 'SNIs',
+                                            ])
+                                            ->reactive()
+                                            ->multiple(),
+                                        CheckboxList::make('routing')
+                                            ->options([
+                                                'hosts' => 'Hosts',
+                                                'methods' => 'Methods',
+                                                'paths' => 'Paths',
+                                                'headers' => 'Headers',
+                                                'snis' => 'SNIs',
+                                            ])
+                                            ->reactive()
+                                            ->columns(5),
+
+                                        Repeater::make('paths')
+                                            ->simple(
+                                                TextInput::make('paths')
+                                            )
+                                            ->label('PATHS')
+                                            ->addActionLabel('Add PATHS')
+                                            ->visible(fn(Get $get) => $get('routing') === 'paths'),
+                                        Repeater::make('snis')
+                                            ->simple(
+                                                TextInput::make('snis')
+                                            )
+                                            ->label('SNIs')
+                                            ->addActionLabel('Add SNIs')
+                                            ->visible(fn(Get $get) => $get('routing') === 'snis'),
+                                        Repeater::make('hosts')
+                                            ->simple(
+                                                TextInput::make('hosts')
+                                            )
+                                            ->label('HOSTS')
+                                            ->addActionLabel('Add HOSTS')
+                                            ->visible(fn(Get $get) => $get('routing') === 'hosts'),
+                                        Section::make('METHODS')
+                                            ->schema([
+                                                Toggle::make('get')
+                                                    ->label('GET')
+                                                    ->onColor('success'),
+                                                Toggle::make('patch')
+                                                    ->label('PATCH')
+                                                    ->onColor('success'),
+                                                Toggle::make('head')
+                                                    ->label('HEAD')
+                                                    ->onColor('success'),
+                                                Toggle::make('custom')
+                                                    ->label('CUSTOM')
+                                                    ->onColor('success'),
+                                                Toggle::make('put')
+                                                    ->label('PUT')
+                                                    ->onColor('success'),
+                                                Toggle::make('delete')
+                                                    ->label('DELETE')
+                                                    ->onColor('success'),
+                                                Toggle::make('connect')
+                                                    ->label('CONNECT')
+                                                    ->onColor('success'),
+                                                Toggle::make('post')
+                                                    ->label('POST')
+                                                    ->onColor('success'),
+                                                Toggle::make('options')
+                                                    ->label('OPTIONS')
+                                                    ->onColor('success'),
+                                                Toggle::make('trace')
+                                                    ->label('TRACE')
+                                                    ->onColor('success'),
+                                            ])
+                                            ->visible(fn(Get $get) => $get('routing') === 'methods')
+                                            ->columns(3),
+                                            Repeater::make('headers')
+                                                ->label('Headers')
+                                                ->schema([
+                                                    TextInput::make('name')
+                                                    ->label('')
+                                                    ->placeholder('Enter a header name'),
+                                                    TextInput::make('value')
+                                                    ->label('')
+                                                    ->placeholder('Enter a header Value')
+                                                ])
+                                                ->columns(2)
+                                                ->visible(fn(Get $get) => $get('routing') === 'headers'),
+
+
+
                                     ]),
                                 Tabs\Tab::make('Expressions')
                                     ->schema([
-                                        // ...
+                                        RichEditor::make('code')
+                                            ->label('Routing Rules')
+                                            ->toolbarButtons([''])
                                     ]),
                             ])
                     ]),

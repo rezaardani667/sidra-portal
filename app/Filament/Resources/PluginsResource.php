@@ -7,6 +7,11 @@ use App\Filament\Resources\PluginsResource\RelationManagers;
 use App\Models\Plugin;
 use App\Models\Plugins;
 use Filament\Forms;
+use Filament\Forms\Components\Checkbox;
+use Filament\Forms\Components\CheckboxList;
+use Filament\Forms\Components\Section;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -16,6 +21,8 @@ use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+
+use function Laravel\Prompts\select;
 
 class PluginsResource extends Resource
 {
@@ -28,10 +35,48 @@ class PluginsResource extends Resource
     {
         return $form
             ->schema([
-                //
-            ]);
-    }
+                TextInput::make('name')
+                    ->label('Name'),
+                Select::make('plugin')
+                    ->label('Plugin')
+                    ->options([
+                        'basic_auth' => 'basic_auth',
+                        'rate_limit' => 'rate_limit',
+                        'whitelist' => 'whitelist',
+                        'jwt' => 'jwt',
+                        'cache' => 'cache',
+                        'rsa' => 'rsa',
+                    ]),
+                Toggle::make('enabled')
+                    ->label('This plugin is Enabled')
+                    ->default(true),
+                Section::make('Plugin Configuration')
+                    ->description('Configuration parameters for this plugin. View advanced parameters for extended configuration.')
+                    ->schema([
+                select::make('protocols')
+                    ->label('Protocols')
+                    ->multiple()
+                    ->searchable()
+                    ->options([
+                        'grpc' => 'grpc',
+                        'grocs' => 'grpcs',
+                        'http' => 'http',
+                        'https' => 'https',
+                    ]),
+                Checkbox::make('credentials')
+                    ->label('Credentials'),
+                Checkbox::make('preflight continue')
+                    ->label('Preflight Continue'),
+                Checkbox::make('private network')
+                    ->label('Private Network')
 
+                    
+                
+                ])
+                ->collapsible()
+                ]);
+    }
+//basic_auth - rate_limit - whitelist - jwt - cache -rsa 
     public static function table(Table $table): Table
     {
         return $table

@@ -11,8 +11,10 @@ use Filament\Forms;
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\Radio;
 use Filament\Forms\Components\Section;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
+use Filament\Forms\Get;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
@@ -53,53 +55,103 @@ class GatewayServicesResource extends Resource
                     ->description('Define the endpoint for this service by specifying the full URL or by its separate elements.')
                     ->aside()
                     ->schema([
-                        Radio::make('traffic_option')
+                        Radio::make('choose')
                             ->label('Choose how and where to send traffic')
                             ->options([
-                                'Full URL' => 'Full URL',
-                                'Protocol,Host,Port and Path' => 'Protocol,Host,Port and Path',
+                                'full_url' => 'Full URL',
+                                'host' => 'Protocol,Host,Port and Path',
                             ])
+                            ->default('full_url')
+                            ->reactive()
                             ->required(),
-                        Section::make('View Advanced Fields')
-                            ->schema([
-                                TextInput::make('retries')
-                                    ->label('Retries')
-                                    ->hintIcon('heroicon-m-question-mark-circle')
-                                    ->hintIconTooltip('The number of retries to execute upon failure to proxy.')
-                                    ->default('5'),
-                                TextInput::make('connection_timeout')
-                                    ->label('Connection Timeout')
-                                    ->hintIcon('heroicon-m-question-mark-circle')
-                                    ->hintIconTooltip('The timeout in milliseconds for establishing a connection to the upstream server.')
-                                    ->default('60000'),
-                                TextInput::make('write_timeout')
-                                    ->label('Write Timeout')
-                                    ->hintIcon('heroicon-m-question-mark-circle')
-                                    ->hintIconTooltip('The timeout in milliseconds between two successive write operations for transmitting a request to the upstream server.')
-                                    ->default('60000'),
-                                TextInput::make('read_timeout')
-                                    ->label('Read Timeout')
-                                    ->hintIcon('heroicon-m-question-mark-circle')
-                                    ->hintIconTooltip('The timeout in milliseconds between two successive read operations for transmitting a request to the upstream server.')
-                                    ->default('60000'),
-                                TextInput::make('client_certificate')
-                                    ->label('Client Certificate')
-                                    ->hintIcon('heroicon-m-question-mark-circle')
-                                    ->hintIconTooltip('Certificate to be used as client certificate while TLS handshaking to the upstream server.')
-                                    ->placeholder('Enter a Certificate ID'),
-                                TextInput::make('ca_certificates')
-                                    ->label('CA Certificates')
-                                    ->hintIcon('heroicon-m-question-mark-circle')
-                                    ->hintIconTooltip("Array of CA Certificate object UUIDs that are used to build the trust store while verifying upstream server's TLS certificate. If set to null when Nginx default is respected. If default CA list in Nginx are not specified and TLS verification is enabled, then handshake with upstream server will always fail (because no CA are trusted).")
-                                    ->placeholder('Enter a comma separated list of CA Certificate IDs'),
-                                Checkbox::make('tls_verify')
-                                    ->label('TLS Verify')
-                                    ->hintIcon('heroicon-m-question-mark-circle')
-                                    ->hintIconTooltip('Whether to enable verification of upstream server TLS certificate. If set to null, then the Nginx default is respected.'),
+                        TextInput::make('upstream_url')
+                                ->label('Upstream URL')
+                                ->placeholder('Enter a URL')
+                                ->visible(fn(Get $get) => $get('choose') === 'full_url')
+                                ->required(),
+                        Select::make('protocol')
+                                ->label('Protocol')
+                                ->default('http')
+                                ->visible(fn(Get $get) => $get('choose') === 'host')
+                                ->required()
+                                ->options([
+                                    'grpc' => [
+                                        'grpc' => 'grpc',
+                                        'grpcs' => 'grpcs',
+                                    ],
+                                    'http' => [
+                                        'http' => 'http',
+                                        'https' => 'https',
+                                    ],
+                                    'tcp' => [
+                                        'tcp' => 'tcp',
+                                        'tls' => 'tls',
+                                        'tls_passthrough' => 'tls_passthrough',
+                                    ],
+                                    'udp' => [
+                                        'udp' => 'udp',
+                                    ],
+                                    'websocket' => [
+                                        'ws' => 'ws',
+                                        'wss' => 'wss',
+                                    ]
+                                ]),
+                        TextInput::make('host')
+                                ->label('Host')
+                                ->required()
+                                ->visible(fn(Get $get) => $get('choose') === 'host')
+                                ->placeholder('Enter a host'),
+                        TextInput::make('path')
+                                ->label('Path')
+                                ->visible(fn(Get $get) => $get('choose') === 'host')
+                                ->placeholder('Enter a path'),
+                        TextInput::make('port')
+                                ->label('Port')
+                                ->numeric()
+                                ->visible(fn(Get $get) => $get('choose') === 'host')
+                                ->default('80')
+                        ]),
 
-                            ])
-                            ->collapsed()
-                    ]),
+                    Section::make('View Advanced Fields')
+                        ->schema([
+                            TextInput::make('retries')
+                                ->label('Retries')
+                                ->hintIcon('heroicon-m-question-mark-circle')
+                                ->hintIconTooltip('The number of retries to execute upon failure to proxy.')
+                                ->default('5'),
+                            TextInput::make('connection_timeout')
+                                ->label('Connection Timeout')
+                                ->hintIcon('heroicon-m-question-mark-circle')
+                                ->hintIconTooltip('The timeout in milliseconds for establishing a connection to the upstream server.')
+                                ->default('60000'),
+                            TextInput::make('write_timeout')
+                                ->label('Write Timeout')
+                                ->hintIcon('heroicon-m-question-mark-circle')
+                                ->hintIconTooltip('The timeout in milliseconds between two successive write operations for transmitting a request to the upstream server.')
+                                ->default('60000'),
+                            TextInput::make('read_timeout')
+                                ->label('Read Timeout')
+                                ->hintIcon('heroicon-m-question-mark-circle')
+                                ->hintIconTooltip('The timeout in milliseconds between two successive read operations for transmitting a request to the upstream server.')
+                                ->default('60000'),
+                            TextInput::make('client_certificate')
+                                ->label('Client Certificate')
+                                ->hintIcon('heroicon-m-question-mark-circle')
+                                ->hintIconTooltip('Certificate to be used as client certificate while TLS handshaking to the upstream server.')
+                                ->placeholder('Enter a Certificate ID'),
+                            TextInput::make('ca_certificates')
+                                ->label('CA Certificates')
+                                ->hintIcon('heroicon-m-question-mark-circle')
+                                ->hintIconTooltip("Array of CA Certificate object UUIDs that are used to build the trust store while verifying upstream server's TLS certificate. If set to null when Nginx default is respected. If default CA list in Nginx are not specified and TLS verification is enabled, then handshake with upstream server will always fail (because no CA are trusted).")
+                                ->placeholder('Enter a comma separated list of CA Certificate IDs'),
+                            Checkbox::make('tls_verify')
+                                ->label('TLS Verify')
+                                ->hintIcon('heroicon-m-question-mark-circle')
+                                ->hintIconTooltip('Whether to enable verification of upstream server TLS certificate. If set to null, then the Nginx default is respected.'),
+                            
+                        ])
+                        ->collapsed()
+                        
             ]);
     }
 
