@@ -19,7 +19,8 @@ class Plugin extends Model
         'enabled',
         'config',
         'protocols',
-        'gateway_id', // foreign key ke GatewayService
+        'gateway_id',
+        'routes_id',
     ];
 
     /**
@@ -36,5 +37,10 @@ class Plugin extends Model
     public function consumers()
     {
         return $this->hasMany(Consumer::class);
+    }
+
+    public function routes()
+    {
+        return $this->belongsTo(Route::class, 'route_id');
     }
 }

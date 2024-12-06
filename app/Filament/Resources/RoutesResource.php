@@ -72,50 +72,18 @@ class RoutesResource extends Resource
                             ->options([
                                 'HTTP' => 'HTTP',
                                 'HTTPS' => 'HTTPS',
-                                'HTTP,HTTPS' => 'HTTP,HTTPS'
+                                'HTTP, HTTPS' => 'HTTP, HTTPS'
                             ])
                             ->required(),
                         Tabs::make('Tabs')
                             ->tabs([
                                 Tabs\Tab::make('Traditional')
                                     ->schema([
-                                        Radio::make('routing')
-                                            ->label('Choose how and where to send traffic')
-                                            ->options([
-                                                'hosts' => 'Hosts',
-                                                'methods' => 'Methods',
-                                                'paths' => 'Paths',
-                                                'headers' => 'Headers',
-                                                'snis' => 'SNIs',
-                                            ])
-                                            ->reactive()
-                                            ->required(),
-                                        Select::make('routing')
-                                            ->options([
-                                                'hosts' => 'Hosts',
-                                                'methods' => 'Methods',
-                                                'paths' => 'Paths',
-                                                'headers' => 'Headers',
-                                                'snis' => 'SNIs',
-                                            ])
-                                            ->reactive()
-                                            ->multiple(),
-                                        CheckboxList::make('routing')
-                                            ->options([
-                                                'hosts' => 'Hosts',
-                                                'methods' => 'Methods',
-                                                'paths' => 'Paths',
-                                                'headers' => 'Headers',
-                                                'snis' => 'SNIs',
-                                            ])
-                                            ->reactive()
-                                            ->columns(5),
-
                                         Repeater::make('paths')
                                             ->simple(
                                                 TextInput::make('paths')
                                             )
-                                            ->label('PATHS')
+                                            ->label('Paths')
                                             ->addActionLabel('Add PATHS')
                                             ->visible(fn(Get $get) => $get('routing') === 'paths'),
                                         Repeater::make('snis')
@@ -129,7 +97,7 @@ class RoutesResource extends Resource
                                             ->simple(
                                                 TextInput::make('hosts')
                                             )
-                                            ->label('HOSTS')
+                                            ->label('Hosts')
                                             ->addActionLabel('Add HOSTS')
                                             ->visible(fn(Get $get) => $get('routing') === 'hosts'),
                                         Section::make('METHODS')
@@ -167,21 +135,32 @@ class RoutesResource extends Resource
                                             ])
                                             ->visible(fn(Get $get) => $get('routing') === 'methods')
                                             ->columns(3),
-                                            Repeater::make('headers')
-                                                ->label('Headers')
-                                                ->schema([
-                                                    TextInput::make('name')
+                                        Repeater::make('headers')
+                                            ->label('Headers')
+                                            ->schema([
+                                                TextInput::make('name')
                                                     ->label('')
                                                     ->placeholder('Enter a header name'),
-                                                    TextInput::make('value')
+                                                TextInput::make('value')
                                                     ->label('')
                                                     ->placeholder('Enter a header Value')
-                                                ])
-                                                ->columns(2)
-                                                ->visible(fn(Get $get) => $get('routing') === 'headers'),
+                                            ])
+                                            ->columns(2)
+                                            ->visible(fn(Get $get) => $get('routing') === 'headers'),
 
-
-
+                                        Radio::make('routing')
+                                            ->label('')
+                                            ->inlineLabel(false)
+                                            ->options([
+                                                'hosts' => 'Hosts',
+                                                'methods' => 'Methods',
+                                                'paths' => 'Paths',
+                                                'headers' => 'Headers',
+                                                'snis' => 'SNIs',
+                                            ])
+                                            ->reactive()
+                                            ->columns(5)
+                                            ->required(),
                                     ]),
                                 Tabs\Tab::make('Expressions')
                                     ->schema([
@@ -201,12 +180,15 @@ class RoutesResource extends Resource
                 TextColumn::make('name')
                     ->label('Name'),
                 TextColumn::make('protocol')
-                    ->label('Protocols'),
+                    ->label('Protocols')
+                    ->badge()
+                    ->color('gray')
+                    ->separator(','),
                 TextColumn::make('host')
                     ->label('Hosts'),
                 TextColumn::make('methods')
                     ->label('Methods'),
-                TextColumn::make('path')
+                TextColumn::make('paths')
                     ->label('Paths'),
                 TextColumn::make('expression')
                     ->label('Expression'),

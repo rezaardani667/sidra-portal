@@ -15,7 +15,13 @@ class CreatePlugins extends CreateRecord
 
     protected function getFormActions(): array
     {
-        return [];
+        return [
+            $this->getCreateFormAction(),
+            $this->getCancelFormAction(),
+            Action::make('Config')
+            ->label('View Configuration')
+            ->link(),
+        ];
     }
 
 }

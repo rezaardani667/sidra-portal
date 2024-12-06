@@ -21,7 +21,7 @@ return new class extends Migration
             $table->boolean('enabled')->nullable();
             $table->string('config')->nullable();
             $table->string('applied_to')->nullable();
-            $table->json('protocols')->nullable();
+            $table->string('protocols')->nullable();
             $table->string('ordering')->nullable();
             $table->string('tags')->nullable();
             $table->timestamps();

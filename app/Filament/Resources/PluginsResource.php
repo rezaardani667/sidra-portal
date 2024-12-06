@@ -6,6 +6,7 @@ use App\Filament\Resources\PluginsResource\Pages;
 use App\Filament\Resources\PluginsResource\RelationManagers;
 use App\Models\Plugin;
 use App\Models\Plugins;
+use App\Models\Route;
 use Filament\Forms;
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\CheckboxList;
@@ -37,53 +38,62 @@ class PluginsResource extends Resource
             ->schema([
                 TextInput::make('name')
                     ->label('Name'),
-                Select::make('plugin')
+                Select::make('type_plugin')
                     ->label('Plugin')
                     ->options([
-                        'basic_auth' => 'basic_auth',
-                        'rate_limit' => 'rate_limit',
-                        'whitelist' => 'whitelist',
-                        'jwt' => 'jwt',
-                        'cache' => 'cache',
-                        'rsa' => 'rsa',
+                        'Basic Auth' => 'Basic Auth',
+                        'Rate Limit' => 'Rate Limit',
+                        'Whitelist' => 'Whitelist',
+                        'JWT' => 'JWT',
+                        'Cache' => 'Cache',
+                        'RSA' => 'RSA',
                     ]),
+                Select::make('routes_id')
+                    ->label('Routes')
+                    ->required()
+                    ->placeholder('Select a Routes')
+                    ->options(
+                        Route::all()->mapWithKeys(function ($routes) {
+                            return [$routes->id => "{$routes->name} "];
+                        })->toArray()
+                    ),
                 Toggle::make('enabled')
                     ->label('This plugin is Enabled')
                     ->default(true),
                 Section::make('Plugin Configuration')
                     ->description('Configuration parameters for this plugin. View advanced parameters for extended configuration.')
                     ->schema([
-                select::make('protocols')
-                    ->label('Protocols')
-                    ->multiple()
-                    ->searchable()
-                    ->options([
-                        'grpc' => 'grpc',
-                        'grocs' => 'grpcs',
-                        'http' => 'http',
-                        'https' => 'https',
-                    ]),
-                Checkbox::make('credentials')
-                    ->label('Credentials'),
-                Checkbox::make('preflight continue')
-                    ->label('Preflight Continue'),
-                Checkbox::make('private network')
-                    ->label('Private Network')
+                        select::make('protocols')
+                            ->label('Protocols')
+                            // ->multiple()
+                            ->searchable()
+                            ->options([
+                                'grpc' => 'grpc',
+                                'grocs' => 'grpcs',
+                                'http' => 'http',
+                                'https' => 'https',
+                            ]),
+                        Checkbox::make('credentials')
+                            ->label('Credentials'),
+                        Checkbox::make('preflight continue')
+                            ->label('Preflight Continue'),
+                        Checkbox::make('private network')
+                            ->label('Private Network')
 
-                    
-                
-                ])
-                ->collapsible()
-                ]);
+
+
+                    ])
+                    ->collapsible()
+            ]);
     }
-//basic_auth - rate_limit - whitelist - jwt - cache -rsa 
+    //basic_auth - rate_limit - whitelist - jwt - cache -rsa 
     public static function table(Table $table): Table
     {
         return $table
             ->columns([
                 TextColumn::make('name')
                     ->label('Name'),
-                TextColumn::make('plugins')
+                TextColumn::make('type_plugin')
                     ->label('Plugin'),
                 TextColumn::make('applied_to')
                     ->label('Applied To'),
@@ -110,10 +120,9 @@ class PluginsResource extends Resource
             ->emptyStateIcon('heroicon-o-puzzle-piece')
             ->emptyStateActions([
                 Tables\Actions\Action::make('create')
-                    ->url(fn (): string => PluginsResource::getUrl('create'))
+                    ->url(fn(): string => PluginsResource::getUrl('create'))
                     ->label('New Plugin'),
             ]);
-
     }
 
     public static function getRelations(): array

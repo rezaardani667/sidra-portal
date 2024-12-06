@@ -16,7 +16,7 @@ class Route extends Model
     protected $fillable = [
         'name',
         'tags',
-        'protocol',
+        'protocols',
         'host',
         'methods',
         'path',
@@ -30,6 +30,11 @@ class Route extends Model
     public function gatewayService()
     {
         return $this->belongsTo(GatewayService::class, 'gateway_id');
+    }
+
+    public function plugins()
+    {
+        return $this->belongsTo(Plugin::class, 'plugin_id');
     }
 
 }
