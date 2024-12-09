@@ -70,11 +70,26 @@ class RoutesResource extends Resource
                         Select::make('protocol')
                             ->label('Protocols')
                             ->options([
+                                'GRPC' => 'GRPC',
+                                'GRPCS' => 'GRPCS',
+                                'GRPC, GRPCS' => 'GRPC, GRPCS',
                                 'HTTP' => 'HTTP',
                                 'HTTPS' => 'HTTPS',
-                                'HTTP, HTTPS' => 'HTTP, HTTPS'
+                                'HTTP, HTTPS' => 'HTTP, HTTPS',
+                                'TCP' => 'TCP',
+                                'TLS' => 'TLS',
+                                'TLS, UDP' => 'TLS, UDP',
+                                'TCP, UDP' => 'TCP, UDP',
+                                'TCP, TLS' => 'TCP, TLS',
+                                'TCP, TLS, UDP' => 'TCP, TLS, UDP',
+                                'TLS_PASSTHROUGH' => 'TLS_PASSTHROUGH',
+                                'UDP' => 'UDP',
+                                'WS' => 'WS',
+                                'WSS' => 'WSS',
+                                'WS, WSS' => 'WS, WSS',
                             ])
-                            ->required(),
+                            ->required()
+                            ->default('HTTP, HTTPS'),
                         Tabs::make('Tabs')
                             ->tabs([
                                 Tabs\Tab::make('Traditional')

@@ -100,7 +100,8 @@ class PluginsResource extends Resource
                 ToggleColumn::make('enabled')
                     ->label('Enabled'),
                 TextColumn::make('ordering')
-                    ->label('Ordering'),
+                    ->label('Ordering')
+                    ->default('Static'),
                 TextColumn::make('tags')
                     ->label('Tags')
             ])
