@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3153b65762b84d9c772e6c5183a71d48",
+    "content-hash": "32a8e4ce30174a03f69e6f371a14e2f8",
     "packages": [
         {
             "name": "anourvalar/eloquent-serialize",
@@ -1006,6 +1006,81 @@
             "time": "2024-10-09T13:47:03+00:00"
         },
         {
+            "name": "drh/laravel-tendepay",
+            "version": "v2.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/DrH97/laravel-tendepay.git",
+                "reference": "5f93109eaa852202db60aa62c075e6796abd0875"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/DrH97/laravel-tendepay/zipball/5f93109eaa852202db60aa62c075e6796abd0875",
+                "reference": "5f93109eaa852202db60aa62c075e6796abd0875",
+                "shasum": ""
+            },
+            "require": {
+                "ext-openssl": "*",
+                "guzzlehttp/guzzle": "^7.5",
+                "illuminate/contracts": "^9.0|^10|^11",
+                "php": "^8.1",
+                "spatie/laravel-package-tools": "^1.14.1"
+            },
+            "require-dev": {
+                "laravel/pint": "^1.0",
+                "nunomaduro/collision": "^6.0",
+                "nunomaduro/larastan": "^2.0.1",
+                "orchestra/testbench": "^8.0",
+                "pestphp/pest": "^1.21",
+                "pestphp/pest-plugin-laravel": "^1.1",
+                "phpstan/extension-installer": "^1.1",
+                "phpstan/phpstan-deprecation-rules": "^1.0",
+                "phpstan/phpstan-phpunit": "^1.0",
+                "phpunit/phpunit": "^9.5",
+                "spatie/laravel-ray": "^1.26"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "aliases": {
+                        "TendePay": "DrH\\TendePay\\Facades\\TendePay"
+                    },
+                    "providers": [
+                        "DrH\\TendePay\\TendePayServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "DrH\\TendePay\\": "src",
+                    "DrH\\TendePay\\Database\\Factories\\": "database/factories"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Dr H",
+                    "email": "jmnabangi@gmail.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Tende Pay API Library",
+            "homepage": "https://github.com/drh97/laravel-tendepay",
+            "keywords": [
+                "b2b payments",
+                "library",
+                "tendepay"
+            ],
+            "support": {
+                "issues": "https://github.com/DrH97/laravel-tendepay/issues",
+                "source": "https://github.com/DrH97/laravel-tendepay/tree/v2.0.0"
+            },
+            "time": "2024-03-30T07:44:34+00:00"
+        },
+        {
             "name": "dutchcodingcompany/filament-socialite",
             "version": "2.3.0",
             "source": {
@@ -1654,6 +1729,80 @@
                 "source": "https://github.com/firebase/php-jwt/tree/v6.10.2"
             },
             "time": "2024-11-24T11:22:49+00:00"
+        },
+        {
+            "name": "flowframe/laravel-trend",
+            "version": "v0.3.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Flowframe/laravel-trend.git",
+                "reference": "391849c27a1d4791efae930746a51d982820bd3a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Flowframe/laravel-trend/zipball/391849c27a1d4791efae930746a51d982820bd3a",
+                "reference": "391849c27a1d4791efae930746a51d982820bd3a",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/contracts": "^8.37|^9|^10.0|^11.0",
+                "php": "^8.2",
+                "spatie/laravel-package-tools": "^1.4.3"
+            },
+            "require-dev": {
+                "nunomaduro/collision": "^5.3|^6.1|^8.0",
+                "orchestra/testbench": "^6.15|^7.0|^8.0|^9.0",
+                "pestphp/pest": "^1.18|^2.34",
+                "pestphp/pest-plugin-laravel": "^1.1|^2.3",
+                "spatie/laravel-ray": "^1.23",
+                "vimeo/psalm": "^4.8|^5.6"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Flowframe\\Trend\\TrendServiceProvider"
+                    ],
+                    "aliases": {
+                        "Trend": "Flowframe\\Trend\\TrendFacade"
+                    }
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Flowframe\\Trend\\": "src",
+                    "Flowframe\\Trend\\Database\\Factories\\": "database/factories"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Lars Klopstra",
+                    "email": "lars@flowframe.nl",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Easily generate model trends",
+            "homepage": "https://github.com/flowframe/laravel-trend",
+            "keywords": [
+                "Flowframe",
+                "laravel",
+                "laravel-trend"
+            ],
+            "support": {
+                "issues": "https://github.com/Flowframe/laravel-trend/issues",
+                "source": "https://github.com/Flowframe/laravel-trend/tree/v0.3.0"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/larsklopstra",
+                    "type": "github"
+                }
+            ],
+            "time": "2024-09-27T09:20:30+00:00"
         },
         {
             "name": "fruitcake/php-cors",

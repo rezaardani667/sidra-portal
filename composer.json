@@ -10,8 +10,10 @@
     "require": {
         "php": "^8.2",
         "bezhansalleh/filament-shield": "3.2.*",
+        "drh/laravel-tendepay": "^2.0",
         "dutchcodingcompany/filament-socialite": "^2.3",
         "filament/filament": "^3.2",
+        "flowframe/laravel-trend": "^0.3.0",
         "guzzlehttp/guzzle": "^7.2",
         "laravel/framework": "^11.9",
         "laravel/sanctum": "^4.0",
