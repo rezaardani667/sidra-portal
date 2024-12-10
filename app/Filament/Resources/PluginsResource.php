@@ -44,8 +44,6 @@ class PluginsResource extends Resource
                             ->label('This plugin is Enabled')
                             ->onIcon('heroicon-o-power')
                             ->offIcon('heroicon-o-power')
-                            ->onColor('success')
-                            ->offColor('danger')
                             ->default(true),
                         Radio::make('plugin')
                             ->label('')

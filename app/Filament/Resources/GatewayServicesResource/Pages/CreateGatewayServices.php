@@ -28,12 +28,14 @@ class CreateGatewayServices extends CreateRecord
 
     protected function handleRecordCreation(array $data): Model
     {
-        $parsedUrl = parse_url($data['upstream_url']);
+        if (isset($data['upstream_url']) && !empty($data['upstream_url'])) {
+            $parsedUrl = parse_url($data['upstream_url']);
 
-        $data['protocol'] = $parsedUrl['scheme'] ?? null;
-        $data['host'] = $parsedUrl['host'] ?? null;
-        $data['port'] = $parsedUrl['port'] ?? 443;
-        $data['path'] = $parsedUrl['path'] ?? '/';
+            $data['protocol'] = $parsedUrl['scheme'] ?? null;
+            $data['host'] = $parsedUrl['host'] ?? null;
+            $data['port'] = $parsedUrl['port'] ?? 443;
+            $data['path'] = $parsedUrl['path'] ?? '/';
+        }
 
         $record = new ($this->getModel())($data);
 

@@ -69,17 +69,7 @@ class GatewayServicesResource extends Resource
                             ->label('Upstream URL')
                             ->placeholder('Enter a URL')
                             ->visible(fn(Get $get) => $get('traffic') === 'full_url')
-                            ->required()
-                            ->afterStateUpdated(function (callable $set, $state) {
-                                $parsedUrl = parse_url($state);
-
-                                if ($parsedUrl) {
-                                    $set('protocol', $parsedUrl['scheme'] ?? null);
-                                    $set('host', $parsedUrl['host'] ?? null);
-                                    $set('port', $parsedUrl['port'] ?? 443);
-                                    $set('path', $parsedUrl['path'] ?? '/');
-                                }
-                            }),
+                            ->required(),
                         Select::make('protocol')
                             ->label('Protocol')
                             ->default('http')
@@ -184,6 +174,7 @@ class GatewayServicesResource extends Resource
                     ->label('Enabled'),
                 TextColumn::make('tags')
                     ->label('Tags')
+                    ->formatStateUsing(fn($state) => implode(' ', array_map(fn($tag) => "{$tag}", explode(', ', $state))))
                     ->badge(),
                 TextColumn::make('updated_at')
                     ->label('Last Modified')
