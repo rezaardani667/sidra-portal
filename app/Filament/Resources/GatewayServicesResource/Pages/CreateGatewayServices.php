@@ -7,6 +7,7 @@ use Filament\Actions;
 use Filament\Actions\Action;
 use Filament\Resources\Pages\CreateRecord;
 use Filament\Support\Enums\ActionSize;
+use Illuminate\Database\Eloquent\Model;
 
 class CreateGatewayServices extends CreateRecord
 {
@@ -20,8 +21,24 @@ class CreateGatewayServices extends CreateRecord
             $this->getCreateFormAction(),
             $this->getCancelFormAction(),
             Action::make('Config')
-            ->label('View Configuration')
-            ->link(),
+                ->label('View Configuration')
+                ->link(),
         ];
+    }
+
+    protected function handleRecordCreation(array $data): Model
+    {
+        $parsedUrl = parse_url($data['upstream_url']);
+
+        $data['protocol'] = $parsedUrl['scheme'] ?? null;
+        $data['host'] = $parsedUrl['host'] ?? null;
+        $data['port'] = $parsedUrl['port'] ?? 443;
+        $data['path'] = $parsedUrl['path'] ?? '/';
+
+        $record = new ($this->getModel())($data);
+
+        $record->save();
+
+        return $record;
     }
 }

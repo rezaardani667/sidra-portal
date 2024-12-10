@@ -99,7 +99,7 @@ class RoutesResource extends Resource
                                                 TextInput::make('paths')
                                             )
                                             ->label('Paths')
-                                            ->addActionLabel('Add PATHS')
+                                            ->addActionLabel('Add Paths')
                                             ->visible(fn(Get $get) => $get('routing') === 'paths'),
                                         Repeater::make('snis')
                                             ->simple(
@@ -113,7 +113,7 @@ class RoutesResource extends Resource
                                                 TextInput::make('hosts')
                                             )
                                             ->label('Hosts')
-                                            ->addActionLabel('Add HOSTS')
+                                            ->addActionLabel('Add Hosts')
                                             ->visible(fn(Get $get) => $get('routing') === 'hosts'),
                                         Section::make('METHODS')
                                             ->schema([

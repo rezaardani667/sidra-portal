@@ -10,11 +10,13 @@ use App\Models\Route;
 use Filament\Forms;
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\CheckboxList;
+use Filament\Forms\Components\Radio;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Form;
+use Filament\Forms\Get;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
@@ -36,30 +38,66 @@ class PluginsResource extends Resource
     {
         return $form
             ->schema([
-                TextInput::make('name')
-                    ->label('Name'),
-                Select::make('type_plugin')
-                    ->label('Plugin')
-                    ->options([
-                        'Basic Auth' => 'Basic Auth',
-                        'Rate Limit' => 'Rate Limit',
-                        'Whitelist' => 'Whitelist',
-                        'JWT' => 'JWT',
-                        'Cache' => 'Cache',
-                        'RSA' => 'RSA',
-                    ]),
-                Select::make('routes_id')
-                    ->label('Routes')
-                    ->required()
-                    ->placeholder('Select a Routes')
-                    ->options(
-                        Route::all()->mapWithKeys(function ($routes) {
-                            return [$routes->id => "{$routes->name} "];
-                        })->toArray()
-                    ),
-                Toggle::make('enabled')
-                    ->label('This plugin is Enabled')
-                    ->default(true),
+                Section::make()
+                    ->schema([
+                        Toggle::make('enabled')
+                            ->label('This plugin is Enabled')
+                            ->onIcon('heroicon-o-power')
+                            ->offIcon('heroicon-o-power')
+                            ->onColor('success')
+                            ->offColor('danger')
+                            ->default(true),
+                        Radio::make('plugin')
+                            ->label('')
+                            ->reactive()
+                            ->required()
+                            ->inline()
+                            ->inlineLabel(false)
+                            ->columnSpanFull()
+                            ->options([
+                                'global' => 'Global',
+                                'scoped' => 'Scoped'
+                            ])
+                            ->descriptions([
+                                'global' => 'All services, routes, and consumers',
+                                'scoped' => 'Specific Gateway Services and/or Routes'
+                            ]),
+                        Select::make('gateway_id')
+                            ->label('Service')
+                            ->required()
+                            ->placeholder('Select a service')
+                            ->visible(fn(Get $get) => $get('plugin') === 'scoped')
+                            ->options(
+                                \App\Models\GatewayService::all()->mapWithKeys(function ($service) {
+                                    return [$service->id => "{$service->name} - {$service->id}"];
+                                })->toArray()
+                            ),
+                        Select::make('routes_id')
+                            ->label('Routes')
+                            ->required()
+                            ->placeholder('Select a Routes')
+                            ->visible(fn(Get $get) => $get('plugin') === 'scoped')
+                            ->options(
+                                Route::all()->mapWithKeys(function ($routes) {
+                                    return [$routes->id => "{$routes->name} "];
+                                })->toArray()
+                            ),
+                        TextInput::make('name')
+                            ->label('Name')
+                            ->columns(1),
+                        Select::make('type_plugin')
+                            ->label('Plugin')
+                            ->columns(1)
+                            ->options([
+                                'Basic Auth' => 'Basic Auth',
+                                'Rate Limit' => 'Rate Limit',
+                                'Whitelist' => 'Whitelist',
+                                'JWT' => 'JWT',
+                                'Cache' => 'Cache',
+                                'RSA' => 'RSA',
+                            ]),
+                    ])
+                    ->columns(2),
                 Section::make('Plugin Configuration')
                     ->description('Configuration parameters for this plugin. View advanced parameters for extended configuration.')
                     ->schema([
@@ -79,14 +117,11 @@ class PluginsResource extends Resource
                             ->label('Preflight Continue'),
                         Checkbox::make('private network')
                             ->label('Private Network')
-
-
-
                     ])
                     ->collapsible()
             ]);
     }
-    //basic_auth - rate_limit - whitelist - jwt - cache -rsa 
+
     public static function table(Table $table): Table
     {
         return $table
