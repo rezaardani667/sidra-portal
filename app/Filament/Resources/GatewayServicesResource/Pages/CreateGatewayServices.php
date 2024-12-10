@@ -15,6 +15,11 @@ class CreateGatewayServices extends CreateRecord
     protected static ?string $title = 'New Gateway Service';
     protected ?string $subheading = 'Service entities are abstractions of each of your own upstream services.';
 
+    protected function getRedirectUrl(): string
+    {
+        return $this->getResource()::getUrl('index');
+    }
+
     protected function getFormActions(): array
     {
         return [
@@ -26,7 +31,7 @@ class CreateGatewayServices extends CreateRecord
         ];
     }
 
-    protected function handleRecordCreation(array $data): Model
+    protected function mutateFormDataBeforeCreate(array $data): array
     {
         if (isset($data['upstream_url']) && !empty($data['upstream_url'])) {
             $parsedUrl = parse_url($data['upstream_url']);
@@ -36,11 +41,7 @@ class CreateGatewayServices extends CreateRecord
             $data['port'] = $parsedUrl['port'] ?? 443;
             $data['path'] = $parsedUrl['path'] ?? '/';
         }
-
-        $record = new ($this->getModel())($data);
-
-        $record->save();
-
-        return $record;
+        
+        return $data;
     }
 }

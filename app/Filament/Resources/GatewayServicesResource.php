@@ -174,7 +174,7 @@ class GatewayServicesResource extends Resource
                     ->label('Enabled'),
                 TextColumn::make('tags')
                     ->label('Tags')
-                    ->formatStateUsing(fn($state) => implode(' ', array_map(fn($tag) => "{$tag}", explode(', ', $state))))
+                    ->separator(',')
                     ->badge(),
                 TextColumn::make('updated_at')
                     ->label('Last Modified')

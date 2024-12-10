@@ -203,7 +203,7 @@ class RoutesResource extends Resource
                     ->label('Hosts'),
                 TextColumn::make('methods')
                     ->label('Methods'),
-                TextColumn::make('paths')
+                TextColumn::make('path')
                     ->label('Paths'),
                 TextColumn::make('expression')
                     ->label('Expression'),

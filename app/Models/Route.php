@@ -16,7 +16,7 @@ class Route extends Model
     protected $fillable = [
         'name',
         'tags',
-        'protocols',
+        'protocol',
         'host',
         'methods',
         'path',
@@ -34,7 +34,7 @@ class Route extends Model
 
     public function plugins()
     {
-        return $this->belongsTo(Plugin::class, 'plugin_id');
+        return $this->hasMany(Plugin::class, 'plugin_id');
     }
 
 }

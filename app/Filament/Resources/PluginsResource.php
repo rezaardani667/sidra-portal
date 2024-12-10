@@ -23,6 +23,7 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 use function Laravel\Prompts\select;
@@ -62,8 +63,8 @@ class PluginsResource extends Resource
                             ]),
                         Select::make('gateway_id')
                             ->label('Service')
-                            ->required()
                             ->placeholder('Select a service')
+                            ->searchable()
                             ->visible(fn(Get $get) => $get('plugin') === 'scoped')
                             ->options(
                                 \App\Models\GatewayService::all()->mapWithKeys(function ($service) {
@@ -72,12 +73,12 @@ class PluginsResource extends Resource
                             ),
                         Select::make('routes_id')
                             ->label('Routes')
-                            ->required()
                             ->placeholder('Select a Routes')
+                            ->searchable()
                             ->visible(fn(Get $get) => $get('plugin') === 'scoped')
                             ->options(
                                 Route::all()->mapWithKeys(function ($routes) {
-                                    return [$routes->id => "{$routes->name} "];
+                                    return [$routes->id => "{$routes->name} - {$routes->id}"];
                                 })->toArray()
                             ),
                         TextInput::make('name')
@@ -129,12 +130,13 @@ class PluginsResource extends Resource
                 TextColumn::make('type_plugin')
                     ->label('Plugin'),
                 TextColumn::make('applied_to')
-                    ->label('Applied To'),
+                    ->label('Applied To')
+                    ->separator(',')
+                    ->badge(),
                 ToggleColumn::make('enabled')
                     ->label('Enabled'),
                 TextColumn::make('ordering')
-                    ->label('Ordering')
-                    ->default('Static'),
+                    ->label('Ordering'),
                 TextColumn::make('tags')
                     ->label('Tags')
             ])
@@ -173,5 +175,26 @@ class PluginsResource extends Resource
             'create' => Pages\CreatePlugins::route('/create'),
             'edit' => Pages\EditPlugins::route('/{record}/edit'),
         ];
+    }
+
+    public static function setAppliedTo(Model $model) : void
+    {
+
+        if (!$model instanceof Plugin) {
+            return;
+        }
+
+        $applied_to = [];
+
+        if ($model->gateway_id) {
+            $applied_to[] = 'Service';
+        }
+
+        if ($model->routes_id) {
+            $applied_to[] = 'Route';
+        }
+
+        $model->applied_to = !empty($applied_to) ? implode(',', $applied_to) : 'Global';
+        $model->save();
     }
 }

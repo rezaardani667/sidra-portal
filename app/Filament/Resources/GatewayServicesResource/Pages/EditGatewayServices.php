@@ -12,6 +12,11 @@ class EditGatewayServices extends EditRecord
     protected static ?string $title = 'New Gateway Service';
     protected ?string $subheading = 'Service entities are abstractions of each of your own upstream services.';
 
+    protected function getRedirectUrl(): string
+    {
+        return $this->getResource()::getUrl('index');
+    }
+
     protected function getHeaderActions(): array
     {
         return [];

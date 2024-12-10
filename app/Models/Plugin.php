@@ -21,6 +21,7 @@ class Plugin extends Model
         'protocols',
         'gateway_id',
         'routes_id',
+        'applied_to',
     ];
 
     /**
@@ -41,6 +42,6 @@ class Plugin extends Model
 
     public function routes()
     {
-        return $this->belongsTo(Route::class, 'route_id');
+        return $this->hasMany(Route::class, 'route_id');
     }
 }
