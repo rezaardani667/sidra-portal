@@ -13,6 +13,11 @@ class CreatePlugins extends CreateRecord
     protected static ?string $title = 'Select a Plugin';
     protected ?string $subheading = 'Choose a plugin from our catalog to install for your organization.';
 
+    protected function getRedirectUrl(): string
+    {
+        return $this->getResource()::getUrl('index');
+    }
+    
     protected function getFormActions(): array
     {
         return [
@@ -24,4 +29,8 @@ class CreatePlugins extends CreateRecord
         ];
     }
 
+    protected function afterCreate(): void
+    {
+        PluginsResource::setAppliedTo($this->getRecord());
+    }
 }

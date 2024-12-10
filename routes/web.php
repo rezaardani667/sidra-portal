@@ -1,6 +1,10 @@
 <?php
 
+use App\Http\Controllers\GatewayConfigController;
+use App\Models\GatewayService;
+use App\Models\Plugin;
 use App\Models\User;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Laravel\Socialite\Facades\Socialite;

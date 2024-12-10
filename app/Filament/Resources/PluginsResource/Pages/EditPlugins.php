@@ -11,10 +11,20 @@ class EditPlugins extends EditRecord
     protected static string $resource = PluginsResource::class;
     protected static ?string $title = 'Configure plugin: key authentication';
 
+    protected function getRedirectUrl(): string
+    {
+        return $this->getResource()::getUrl('index');
+    }
+
     protected function getHeaderActions(): array
     {
         return [
             Actions\DeleteAction::make(),
         ];
+    }
+
+    protected function afterSave(): void
+    {
+        $this->getResource()::setAppliedTo($this->getRecord());
     }
 }
