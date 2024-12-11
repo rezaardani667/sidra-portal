@@ -17,11 +17,22 @@ return new class extends Migration
             $table->string('name')->nullable();
             $table->string('tags')->nullable();
             $table->string('protocol')->nullable();
-            $table->string('host')->nullable();
+            $table->string('hosts')->nullable();
             $table->string('methods')->nullable();
-            $table->string('path')->nullable();
+            $table->string('paths')->nullable();
+            $table->string('snis')->nullable();
+            $table->string('headers')->nullable();
             $table->text('expression')->nullable();
             $table->timestamps();
+
+            // Advanced Fields
+            $table->string('path_handling')->default('v0');
+            $table->integer('https_redirect_status_code')->default(426);
+            $table->integer('regex_priority')->default(0);
+            $table->boolean('strip_path')->default(true);
+            $table->boolean('preserve_host')->default(false);
+            $table->boolean('request_buffering')->default(true);
+            $table->boolean('response_buffering')->default(true);
 
             $table->foreign('gateway_id')->references('id')->on('gateway_services')->onDelete('cascade');
         });

@@ -5,7 +5,9 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\UsersResource\Pages;
 use App\Filament\Resources\UsersResource\RelationManagers;
 use App\Models\User;
+use Faker\Provider\ar_EG\Text;
 use Filament\Forms;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -31,6 +33,11 @@ class UsersResource extends Resource
                     ->label('Email')
                     ->email()
                     ->required(),
+                Forms\Components\Select::make('roles')
+                    ->relationship('roles', 'name')
+                    ->multiple()
+                    ->preload()
+                    ->searchable(),
             ]);
     }
 

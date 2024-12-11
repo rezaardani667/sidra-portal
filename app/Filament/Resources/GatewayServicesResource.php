@@ -17,6 +17,7 @@ use Filament\Forms\Form;
 use Filament\Forms\Get;
 use Filament\Forms\Set;
 use Filament\Resources\Resource;
+use Filament\Support\Enums\FontWeight;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ToggleColumn;
@@ -45,6 +46,12 @@ class GatewayServicesResource extends Resource
                         TextInput::make('name')
                             ->label('Name')
                             ->placeholder('Enter a unique name')
+                            ->regex('/^\S*$/')
+                            ->validationMessages([
+                                'unique' => 'name - name (type: unique) constraint failed',
+                                'regex' => 'The name can be any string containing characters, letters, numbers, or the following characters: ., -, _, or ~. Do not use spaces.'
+                            ])
+                            ->unique()
                             ->required(),
                         TextInput::make('tags')
                             ->label('Tags')
@@ -104,6 +111,10 @@ class GatewayServicesResource extends Resource
                             ->placeholder('Enter a host'),
                         TextInput::make('path')
                             ->label('Path')
+                            ->regex('/\//')
+                            ->validationMessages([
+                                'regex' => 'path - invalid path: must begin with `/` and should not include characters outside of the reserved list of RFC 3986'
+                            ])
                             ->visible(fn(Get $get) => $get('traffic') === 'host')
                             ->placeholder('Enter a path'),
                         TextInput::make('port')
@@ -120,7 +131,7 @@ class GatewayServicesResource extends Resource
                             ->hintIcon('heroicon-m-question-mark-circle')
                             ->hintIconTooltip('The number of retries to execute upon failure to proxy.')
                             ->default('5'),
-                        TextInput::make('connection_timeout')
+                        TextInput::make('connect_timeout')
                             ->label('Connection Timeout')
                             ->hintIcon('heroicon-m-question-mark-circle')
                             ->hintIconTooltip('The timeout in milliseconds for establishing a connection to the upstream server.')
@@ -149,10 +160,8 @@ class GatewayServicesResource extends Resource
                             ->label('TLS Verify')
                             ->hintIcon('heroicon-m-question-mark-circle')
                             ->hintIconTooltip('Whether to enable verification of upstream server TLS certificate. If set to null, then the Nginx default is respected.'),
-
                     ])
                     ->collapsed()
-
             ]);
     }
 
@@ -161,7 +170,8 @@ class GatewayServicesResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('name')
-                    ->label('Name'),
+                    ->label('Name')
+                    ->weight(FontWeight::Bold),
                 TextColumn::make('protocol')
                     ->label('Protocol'),
                 TextColumn::make('host')

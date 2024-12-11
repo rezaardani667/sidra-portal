@@ -102,7 +102,7 @@ class PluginsResource extends Resource
                     ->schema([
                         select::make('protocols')
                             ->label('Protocols')
-                            // ->multiple()
+                            ->multiple()
                             ->searchable()
                             ->options([
                                 'grpc' => 'grpc',
@@ -139,6 +139,8 @@ class PluginsResource extends Resource
                     ->label('Ordering'),
                 TextColumn::make('tags')
                     ->label('Tags')
+                    ->separator(',')
+                    ->badge(),
             ])
             ->filters([
                 //
@@ -177,7 +179,7 @@ class PluginsResource extends Resource
         ];
     }
 
-    public static function setAppliedTo(Model $model) : void
+    public static function setAppliedTo(Model $model): void
     {
 
         if (!$model instanceof Plugin) {

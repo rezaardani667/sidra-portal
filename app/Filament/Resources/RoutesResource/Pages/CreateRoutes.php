@@ -24,4 +24,21 @@ class CreateRoutes extends CreateRecord
             ->link(),
         ];
     }
+
+    protected function mutateFormDataBeforeCreate(array $data): array
+    {
+        if (isset($data['headers'])) {
+            $formattedHeaders = [];
+
+            foreach ($data['headers'] as $header) {
+                $formattedHeaders[] = [
+                    $header['name'] => [$header['value']]
+                ];
+            }
+
+            $data['headers'] = $formattedHeaders;
+        }
+
+        return $data;
+    }
 }

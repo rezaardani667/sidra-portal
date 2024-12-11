@@ -13,6 +13,7 @@ use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
+use Filament\Support\Enums\FontWeight;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
@@ -36,21 +37,18 @@ class ConsumersResource extends Resource
                     ->description('General information will help identify and manage added consumer.')
                     ->aside()
                     ->schema([
-
-                Section::make('Consumer Identification')
-                    ->description('A consumer can have both unique username and unique custom ID or one of them.')
-                    ->schema([
-                        TextInput::make('name')
-                            ->label('Username')
-                            ->placeholder('Enter a unique username')
-                            ->required(),
-
-                        TextInput::make('custom_id')
-                            ->label('Custom ID')
-                            ->placeholder('Enter a unique custom ID')
-                            ->required()
-                    ]),
-
+                        Section::make('Consumer Identification')
+                            ->description('A consumer can have both unique username and unique custom ID or one of them.')
+                            ->schema([
+                                TextInput::make('username')
+                                    ->label('Username')
+                                    ->placeholder('Enter a unique username')
+                                    ->required(),
+                                TextInput::make('custom_id')
+                                    ->label('Custom ID')
+                                    ->placeholder('Enter a unique custom ID')
+                                    ->required()
+                            ]),
                         TextInput::make('tags')
                             ->label('Tags')
                             ->placeholder('Enter a list of tags separated by comma')
@@ -64,8 +62,9 @@ class ConsumersResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('name')
-                    ->label('Username'),
+                TextColumn::make('username')
+                    ->label('Username')
+                    ->weight(FontWeight::Bold),
                 TextColumn::make('custom_id')
                     ->label('Custom ID'),
                 TextColumn::make('tags')
@@ -87,7 +86,7 @@ class ConsumersResource extends Resource
             ->emptyStateIcon('heroicon-o-user-group')
             ->emptyStateActions([
                 Tables\Actions\Action::make('create')
-                    ->url(fn (): string => ConsumersResource::getUrl('create'))
+                    ->url(fn(): string => ConsumersResource::getUrl('create'))
                     ->label('New Consumer'),
             ]);
     }
