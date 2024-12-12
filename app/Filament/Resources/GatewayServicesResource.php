@@ -51,7 +51,7 @@ class GatewayServicesResource extends Resource
                                 'unique' => 'name - name (type: unique) constraint failed',
                                 'regex' => 'The name can be any string containing characters, letters, numbers, or the following characters: ., -, _, or ~. Do not use spaces.'
                             ])
-                            ->unique()
+                            ->unique(ignoreRecord:true)
                             ->required()
                             ->hintIcon('heroicon-m-information-circle')
                             ->hintIconTooltip('The Service name'),
