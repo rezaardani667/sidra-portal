@@ -45,12 +45,16 @@ class GatewayServicesResource extends Resource
                         TextInput::make('name')
                             ->label('Name')
                             ->placeholder('Enter a unique name')
-                            ->required(),
+                            ->required()
+                            ->hintIcon('heroicon-m-information-circle')
+                            ->hintIconTooltip('The Service name'),
                         TextInput::make('tags')
                             ->label('Tags')
                             ->placeholder('Enter a list of tags separated by comma')
                             ->helperText('e.g. tag1, tag2, tag3')
-                            ->required(),
+                            ->required()
+                            ->hintIcon('heroicon-m-information-circle')
+                            ->hintIconTooltip('An optional set of strings associated with the Service for grouping and filtering.'),
                     ]),
                 Section::make('Service Endpoint')
                     ->description('Define the endpoint for this service by specifying the full URL or by its separate elements.')
@@ -69,7 +73,9 @@ class GatewayServicesResource extends Resource
                             ->label('Upstream URL')
                             ->placeholder('Enter a URL')
                             ->visible(fn(Get $get) => $get('traffic') === 'full_url')
-                            ->required(),
+                            ->required()
+                            ->hintIcon('heroicon-m-information-circle')
+                            ->hintIconTooltip('This is the URL of the API you will manage in Konnect.'),
                         Select::make('protocol')
                             ->label('Protocol')
                             ->default('http')
@@ -117,37 +123,37 @@ class GatewayServicesResource extends Resource
                     ->schema([
                         TextInput::make('retries')
                             ->label('Retries')
-                            ->hintIcon('heroicon-m-question-mark-circle')
+                            ->hintIcon('heroicon-m-information-circle')
                             ->hintIconTooltip('The number of retries to execute upon failure to proxy.')
                             ->default('5'),
                         TextInput::make('connection_timeout')
                             ->label('Connection Timeout')
-                            ->hintIcon('heroicon-m-question-mark-circle')
+                            ->hintIcon('heroicon-m-information-circle')
                             ->hintIconTooltip('The timeout in milliseconds for establishing a connection to the upstream server.')
                             ->default('60000'),
                         TextInput::make('write_timeout')
                             ->label('Write Timeout')
-                            ->hintIcon('heroicon-m-question-mark-circle')
+                            ->hintIcon('heroicon-m-information-circle')
                             ->hintIconTooltip('The timeout in milliseconds between two successive write operations for transmitting a request to the upstream server.')
                             ->default('60000'),
                         TextInput::make('read_timeout')
                             ->label('Read Timeout')
-                            ->hintIcon('heroicon-m-question-mark-circle')
+                            ->hintIcon('heroicon-m-information-circle')
                             ->hintIconTooltip('The timeout in milliseconds between two successive read operations for transmitting a request to the upstream server.')
                             ->default('60000'),
                         TextInput::make('client_certificate')
                             ->label('Client Certificate')
-                            ->hintIcon('heroicon-m-question-mark-circle')
+                            ->hintIcon('heroicon-m-information-circle')
                             ->hintIconTooltip('Certificate to be used as client certificate while TLS handshaking to the upstream server.')
                             ->placeholder('Enter a Certificate ID'),
                         TextInput::make('ca_certificates')
                             ->label('CA Certificates')
-                            ->hintIcon('heroicon-m-question-mark-circle')
+                            ->hintIcon('heroicon-m-information-circle')
                             ->hintIconTooltip("Array of CA Certificate object UUIDs that are used to build the trust store while verifying upstream server's TLS certificate. If set to null when Nginx default is respected. If default CA list in Nginx are not specified and TLS verification is enabled, then handshake with upstream server will always fail (because no CA are trusted).")
                             ->placeholder('Enter a comma separated list of CA Certificate IDs'),
                         Checkbox::make('tls_verify')
                             ->label('TLS Verify')
-                            ->hintIcon('heroicon-m-question-mark-circle')
+                            ->hintIcon('heroicon-m-information-circle')
                             ->hintIconTooltip('Whether to enable verification of upstream server TLS certificate. If set to null, then the Nginx default is respected.'),
 
                     ])

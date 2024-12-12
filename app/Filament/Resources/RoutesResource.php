@@ -8,6 +8,7 @@ use App\Models\Route;
 use App\Models\Routes;
 use Doctrine\DBAL\Schema\Schema;
 use Filament\Forms;
+use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\CheckboxList;
 use Filament\Forms\Components\Radio;
 use Filament\Forms\Components\Repeater;
@@ -69,6 +70,8 @@ class RoutesResource extends Resource
                     ->schema([
                         Select::make('protocol')
                             ->label('Protocols')
+                            ->hintIcon('heroicon-m-information-circle')
+                            ->hintIconTooltip('Routes have a protocols property to restrict the client protocol they should listen for.')
                             ->options([
                                 'GRPC' => 'GRPC',
                                 'GRPCS' => 'GRPCS',
@@ -183,8 +186,48 @@ class RoutesResource extends Resource
                                             ->label('Routing Rules')
                                             ->toolbarButtons([''])
                                     ]),
-                            ])
+                            ]),
                     ]),
+
+                Section::make('View Advanced Fields')
+                    ->schema([
+                        Select::make('path_handling')
+                            ->label('Path Handling')
+                            ->default('v0')
+                            ->hintIcon('heroicon-m-information-circle')
+                            ->hintIconTooltip('This treats service.path, route.path and request path as segments of a URL.')
+                            ->options([
+                                'v0' => 'v0',
+                                'v1' => 'v1',
+                            ]),
+                        Select::make('redirect_status')
+                            ->label('HTTPS Redirect Status Code')
+                            ->default('426')
+                            ->options([
+                                '426' => '426',
+                                '301' => '301',
+                                '302' => '302',
+                                '307' => '307',
+                                '308' => '308',
+                            ]),
+                        TextInput::make('regex')
+                            ->label('Regex Priority')
+                            ->numeric()
+                            ->default('0'),
+                        Checkbox::make('strip_path')
+                            ->label('Strip Path')
+                            ->default(true),
+                        Checkbox::make('preserve_host')
+                            ->label('Preserve Host'),
+                        Checkbox::make('request_buffering')
+                            ->label('Request Buffering')
+                            ->default(true),
+                        Checkbox::make('response_buffering')
+                            ->label('Response Buffering')
+                            ->default(true)
+                    ])
+                    ->collapsed()
+
             ]);
     }
 

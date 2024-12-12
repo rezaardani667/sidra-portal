@@ -106,7 +106,7 @@ class PluginsResource extends Resource
                             ->searchable()
                             ->options([
                                 'grpc' => 'grpc',
-                                'grocs' => 'grpcs',
+                                'grpcs' => 'grpcs',
                                 'http' => 'http',
                                 'https' => 'https',
                             ]),
@@ -177,7 +177,7 @@ class PluginsResource extends Resource
         ];
     }
 
-    public static function setAppliedTo(Model $model) : void
+    public static function setAppliedTo(Model $model): void
     {
 
         if (!$model instanceof Plugin) {
