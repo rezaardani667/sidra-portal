@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('gateway_services', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->string('name')->nullable();
+            $table->string('name')->unique();;
             $table->string('tags')->nullable();
             $table->string('upstream_url')->nullable();
             $table->string('protocol')->nullable();
@@ -24,6 +24,14 @@ return new class extends Migration
             $table->text('public_key')->nullable();
             $table->text('private_key')->nullable();
             $table->timestamps();
+
+            // Advanced Fields
+            $table->integer('retries');
+            $table->integer('connect_timeout');
+            $table->integer('write_timeout');
+            $table->integer('read_timeout');
+            $table->text('ca_certificates')->nullable();
+            $table->text('client_certificate')->nullable();
         });
     }
 

@@ -22,6 +22,12 @@ class GatewayService extends Model
         'path',
         'port',
         'public_key',
+        'connect_timeout',
+        'read_timeout',
+        'write_timeout',
+        'retries',
+        'ca_certificates',
+        'client_certificate',
     ];
 
     /**

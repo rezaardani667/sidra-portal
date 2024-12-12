@@ -24,17 +24,15 @@ class Plugin extends Model
         'applied_to',
     ];
 
-    /**
-     * Relasi dengan tabel GatewayService
-     */
+    protected $casts = [
+        'protocols' => 'array',
+    ];
+
     public function gatewayService()
     {
         return $this->belongsTo(GatewayService::class, 'gateway_id');
     }
 
-    /**
-     * Relasi dengan tabel Consumers
-     */
     public function consumers()
     {
         return $this->hasMany(Consumer::class);

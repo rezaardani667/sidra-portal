@@ -13,17 +13,17 @@ return new class extends Migration
     {
         Schema::create('plugins', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->uuid('gateway_id');
-            $table->uuid('routes_id');
-            $table->uuid('consumers_id');
+            $table->uuid('gateway_id')->nullable();
+            $table->uuid('routes_id')->nullable();
+            $table->uuid('consumers_id')->nullable();
             $table->string('name')->nullable();
             $table->string('type_plugin')->nullable();
             $table->boolean('enabled')->nullable();
             $table->string('config')->nullable();
             $table->string('applied_to')->nullable();
             $table->string('protocols')->nullable();
-            $table->string('ordering')->nullable();
-            $table->string('tags')->nullable();
+            $table->string('ordering')->default('Static');
+            $table->string('tags')->default('-');
             $table->timestamps();
 
             $table->foreign('gateway_id')->references('id')->on('gateway_services')->onDelete('cascade');

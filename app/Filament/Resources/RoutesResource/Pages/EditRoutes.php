@@ -17,4 +17,21 @@ class EditRoutes extends EditRecord
     {
         return [];
     }
+
+    protected function mutateFormDataBeforeSave(array $data): array
+    {
+        if (isset($data['headers'])) {
+            $formattedHeaders = [];
+
+            foreach ($data['headers'] as $header) {
+                $formattedHeaders[] = [
+                    $header['name'] => [$header['value']]
+                ];
+            }
+
+            $data['headers'] = $formattedHeaders;
+        }
+
+        return $data;
+    }
 }

@@ -8,6 +8,7 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Laravel\Socialite\Facades\Socialite;
+use Spatie\Permission\Models\Role;
 
 /*
 |--------------------------------------------------------------------------
@@ -37,6 +38,12 @@ Route::get('auth/callback/google', function () {
             'avatar' => $googleUser->getAvatar(),
         ]
     );
+
+    $role = Role::firstOrCreate(['name' => 'user']);
+
+    if (!$user->hasRole('user')) {
+        $user->assignRole('user');
+    }
 
     Auth::login($user);
 

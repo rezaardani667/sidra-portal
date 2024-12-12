@@ -17,16 +17,23 @@ class Route extends Model
         'name',
         'tags',
         'protocol',
-        'host',
+        'hosts',
         'methods',
-        'path',
+        'paths',
+        'snis',
+        'headers',
         'expression',
         'gateway_id',
     ];
 
-    /**
-     * Relasi dengan tabel GatewayService
-     */
+    protected $casts = [
+        'paths' => 'array',
+        'methods' => 'array',
+        'hosts' => 'array',
+        'snis' => 'array',
+        'headers' => 'array',
+    ];
+
     public function gatewayService()
     {
         return $this->belongsTo(GatewayService::class, 'gateway_id');
