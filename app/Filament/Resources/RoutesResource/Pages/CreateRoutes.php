@@ -29,16 +29,16 @@ class CreateRoutes extends CreateRecord
     {
         if (isset($data['headers'])) {
             $formattedHeaders = [];
-
+        
             foreach ($data['headers'] as $header) {
-                $formattedHeaders[] = [
-                    $header['name'] => [$header['value']]
-                ];
+                if (isset($header['name'], $header['value'])) {
+                    $formattedHeaders[$header['name']][] = $header['value'];
+                }
             }
-
+        
             $data['headers'] = $formattedHeaders;
         }
-
+        
         return $data;
     }
 }

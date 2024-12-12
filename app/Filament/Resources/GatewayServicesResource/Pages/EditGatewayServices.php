@@ -5,6 +5,7 @@ namespace App\Filament\Resources\GatewayServicesResource\Pages;
 use App\Filament\Resources\GatewayServicesResource;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
+use Illuminate\Database\Eloquent\Model;
 
 class EditGatewayServices extends EditRecord
 {
@@ -20,5 +21,21 @@ class EditGatewayServices extends EditRecord
     protected function getHeaderActions(): array
     {
         return [];
+    }
+
+    protected function fillFormWithDataAndCallHooks(Model $record, array $extraData = []): void
+    {
+        $this->callHook('beforeFill');
+
+        $data = $this->mutateFormDataBeforeFill([
+            ...$record->attributesToArray(),
+            ...$extraData,
+        ]);
+
+        $data['traffic'] = !empty($data['upstream_url']) ? 'full_url' : 'host';
+
+        $this->form->fill($data);
+
+        $this->callHook('afterFill');
     }
 }

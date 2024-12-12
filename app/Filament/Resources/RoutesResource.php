@@ -53,7 +53,7 @@ class RoutesResource extends Resource
                                 'unique' => 'name - name (type: unique) constraint failed',
                                 'regex' => 'The name can be any string containing characters, letters, numbers, or the following characters: ., -, _, or ~. Do not use spaces.'
                             ])
-                            ->unique()
+                            ->unique(ignoreRecord:true)
                             ->placeholder('Enter a unique name'),
                         Select::make('gateway_id')
                             ->label('Service')
@@ -110,12 +110,12 @@ class RoutesResource extends Resource
                                         Repeater::make('paths')
                                             ->simple(
                                                 TextInput::make('paths')
+                                                    ->regex('/\//')
+                                                    ->validationMessages([
+                                                        'regex' => 'path - invalid path: must begin with `/` and should not include characters outside of the reserved list of RFC 3986'
+                                                    ])
                                             )
                                             ->label('Paths')
-                                            ->regex('/\//')
-                                            ->validationMessages([
-                                                'regex' => 'path - invalid path: must begin with `/` and should not include characters outside of the reserved list of RFC 3986'
-                                            ])
                                             ->addActionLabel('Add Paths')
                                             ->visible(fn(Get $get) => $get('routing1') === true),
                                         Toggle::make('routing2')
@@ -199,7 +199,7 @@ class RoutesResource extends Resource
                                 'v0' => 'v0',
                                 'v1' => 'v1',
                             ]),
-                        Select::make('redirect_status')
+                        Select::make('https_redirect_status_code')
                             ->label('HTTPS Redirect Status Code')
                             ->default('426')
                             ->options([
@@ -209,7 +209,7 @@ class RoutesResource extends Resource
                                 '307' => '307',
                                 '308' => '308',
                             ]),
-                        TextInput::make('regex')
+                        TextInput::make('regex_priority')
                             ->label('Regex Priority')
                             ->numeric()
                             ->default('0'),

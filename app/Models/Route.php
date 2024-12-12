@@ -24,6 +24,13 @@ class Route extends Model
         'headers',
         'expression',
         'gateway_id',
+        'path_handling',
+        'https_redirect_status_code',
+        'regex_priority',
+        'strip_path',
+        'preserve_host',
+        'request_buffering',
+        'response_buffering',
     ];
 
     protected $casts = [
