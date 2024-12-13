@@ -9,6 +9,8 @@ use Filament\Resources\Pages\ListRecords;
 class ListDataPlaneNodes extends ListRecords
 {
     protected static string $resource = DataPlaneNodesResource::class;
+    protected static ?string $title = 'Gateway Manager';
+
 
     protected function getHeaderActions(): array
     {

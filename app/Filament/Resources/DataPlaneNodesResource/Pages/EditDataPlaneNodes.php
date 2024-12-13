@@ -9,6 +9,8 @@ use Filament\Resources\Pages\EditRecord;
 class EditDataPlaneNodes extends EditRecord
 {
     protected static string $resource = DataPlaneNodesResource::class;
+    protected static ?string $title = 'Gateway Manager';
+
 
     protected function getHeaderActions(): array
     {

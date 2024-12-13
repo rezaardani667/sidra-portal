@@ -5,10 +5,19 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\DataPlaneNodesResource\Pages;
 use App\Filament\Resources\DataPlaneNodesResource\RelationManagers;
 use App\Models\DataPlaneNodes;
+use Doctrine\DBAL\Schema\Schema;
 use Filament\Forms;
+use Filament\Forms\Components\Radio;
+use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\Section;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -26,7 +35,57 @@ class DataPlaneNodesResource extends Resource
     {
         return $form
             ->schema([
-                //
+                Section::make('Choose how to Deploy your Gateway')
+                    ->description('This will determine how your Gateway will handle traffic and data.')
+                    ->aside()
+                    ->schema([
+                        Radio::make('deploy_gateway')
+                            ->label('')
+                            ->options([
+                                'serverles' => 'Serverles',
+                                'dedicated_cloud' => 'Dedicated Cloud',
+                                'self_managed_hybrid' => 'Self-Managed Hybrid',
+                                'kubernetes_ingress_controller' => 'Kubernetes Ingress Controller'
+                            ])
+                            ->descriptions([
+                                'serverles' => 'For learning and development',
+                                'dedicated_cloud' => 'For production and scale deployed as a single-tenant solution',
+                                'self_managed_hybrid' => 'For flexibility and customized deployment in any environment',
+                                'kubernetes_ingress_controller' => 'For traffic management native to Kubernetes'
+                            ])
+                            ->default('serverles'),
+                    ]),
+                Section::make('General Information')
+                    ->description('Add details to help identify and manage your Gateway.')
+                    ->aside()
+                    ->schema([
+                        TextInput::make('name')
+                            ->label('Name')
+                            ->placeholder('Enter a unique name')
+                            ->required(),
+                        Textarea::make('description')
+                            ->label('Description')
+                            ->placeholder('Describe the purpose of your new control plane')
+                    ]),
+                Section::make('Advanced Settings')
+                    ->schema([
+                        Repeater::make('labels')
+                            ->label('Labels')
+                            ->schema([
+                                TextInput::make('name')
+                                    ->label('')
+                                    ->columns(1)
+                                    ->placeholder('Enter a header name'),
+                                TextInput::make('value')
+                                    ->label('')
+                                    ->columns(1)
+                                    ->placeholder('Enter a header Value')
+                            ])
+                            ->columns(2)
+                            ->maxItems(5)
+
+                    ])
+                    ->collapsed()
             ]);
     }
 
@@ -34,7 +93,18 @@ class DataPlaneNodesResource extends Resource
     {
         return $table
             ->columns([
-                //
+                TextColumn::make('control_planes')
+                    ->label('Control Planes'),
+                TextColumn::make('type')
+                    ->label('Type'),
+                TextColumn::make('data_plane_nodes')
+                    ->label('Data Plane Nodes'),
+                TextColumn::make('service')
+                    ->label('Services'),
+                ToggleColumn::make('analytics')
+                    ->label('Analytics'),
+                TextColumn::make('labels')
+                    ->label('Labels')
             ])
             ->filters([
                 //
@@ -52,7 +122,7 @@ class DataPlaneNodesResource extends Resource
             ->emptyStateIcon('heroicon-o-inbox-stack')
             ->emptyStateActions([
                 Tables\Actions\Action::make('create')
-                    ->url(fn (): string => DataPlaneNodesResource::getUrl('create'))
+                    ->url(fn(): string => DataPlaneNodesResource::getUrl('create'))
                     ->label('New DataPlaneNodes'),
             ]);
     }

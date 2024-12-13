@@ -9,4 +9,5 @@ use Filament\Resources\Pages\CreateRecord;
 class CreateDataPlaneNodes extends CreateRecord
 {
     protected static string $resource = DataPlaneNodesResource::class;
+    protected static ?string $title = 'Create a Gateway';
 }
