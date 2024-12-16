@@ -16,11 +16,8 @@ return new class extends Migration
             $table->uuid('data_plane_id');
             $table->string('name')->unique();
             $table->string('tags')->nullable();
-            $table->string('upstream_url')->nullable();
             $table->string('protocol')->nullable();
             $table->string('host')->nullable();
-            $table->string('path')->nullable();
-            $table->integer('port')->nullable();
             $table->boolean('enabled')->default(true);
             $table->timestamps();
 

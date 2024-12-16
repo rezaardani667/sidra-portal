@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\GatewayServicesResource\Pages;
 use App\Filament\Resources\GatewayServicesResource\RelationManagers;
+use App\Models\DataPlaneNodes;
 use App\Models\GatewayService;
 use App\Models\GatewayServices;
 use App\Models\Service;
@@ -43,6 +44,13 @@ class GatewayServicesResource extends Resource
                     ->description('General information will help identify and manage this Gateway Service.')
                     ->aside()
                     ->schema([
+                        Select::make('data_plane_id')
+                        ->label('Data Plane Nodes')
+                        ->options(
+                            DataPlaneNodes::all()->mapWithKeys(function ($service) {
+                                return [$service->id => "{$service->name} - {$service->id}"];
+                            })->toArray()
+                        ),
                         TextInput::make('name')
                             ->label('Name')
                             ->placeholder('Enter a unique name')
@@ -67,26 +75,10 @@ class GatewayServicesResource extends Resource
                     ->description('Define the endpoint for this service by specifying the full URL or by its separate elements.')
                     ->aside()
                     ->schema([
-                        Radio::make('traffic')
-                            ->label('Choose how and where to send traffic')
-                            ->options([
-                                'full_url' => 'Full URL',
-                                'host' => 'Protocol,Host,Port and Path',
-                            ])
-                            ->default('full_url')
-                            ->reactive()
-                            ->required(),
-                        TextInput::make('upstream_url')
-                            ->label('Upstream URL')
-                            ->placeholder('Enter a URL')
-                            ->visible(fn(Get $get) => $get('traffic') === 'full_url')
-                            ->required()
-                            ->hintIcon('heroicon-m-information-circle')
-                            ->hintIconTooltip('This is the URL of the API you will manage in Konnect.'),
+                        
                         Select::make('protocol')
                             ->label('Protocol')
                             ->default('http')
-                            ->visible(fn(Get $get) => $get('traffic') === 'host')
                             ->required()
                             ->options([
                                 'grpc' => [
@@ -113,21 +105,8 @@ class GatewayServicesResource extends Resource
                         TextInput::make('host')
                             ->label('Host')
                             ->required()
-                            ->visible(fn(Get $get) => $get('traffic') === 'host')
                             ->placeholder('Enter a host'),
-                        TextInput::make('path')
-                            ->label('Path')
-                            ->regex('/\//')
-                            ->validationMessages([
-                                'regex' => 'path - invalid path: must begin with `/` and should not include characters outside of the reserved list of RFC 3986'
-                            ])
-                            ->visible(fn(Get $get) => $get('traffic') === 'host')
-                            ->placeholder('Enter a path'),
-                        TextInput::make('port')
-                            ->label('Port')
-                            ->numeric()
-                            ->visible(fn(Get $get) => $get('traffic') === 'host')
-                            ->default('80')
+                        
                     ]),
 
                 Section::make('View Advanced Fields')
