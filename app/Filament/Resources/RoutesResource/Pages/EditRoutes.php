@@ -45,11 +45,13 @@ class EditRoutes extends EditRecord
             ...$extraData,
         ]);
 
-        $formated = [];
-        foreach ( $data['headers'] as $key => $value) {
-            $formated[] = ['name' => $key, 'value' => implode(',', $value)];
+        if (isset($data['headers'])) {   
+            $formated = [];
+            foreach ( $data['headers'] as $key => $value) {
+                $formated[] = ['name' => $key, 'value' => implode(',', $value)];
+            }
+            $data['headers'] = $formated;
         }
-        $data['headers'] = $formated;
         $data['routing1'] = !empty($data['paths']) ? true : false ;
         $data['routing2'] = !empty($data['hosts']) ? true : false ;
         $data['routing3'] = !empty($data['methods']) ? true : false ;

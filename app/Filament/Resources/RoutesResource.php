@@ -53,7 +53,7 @@ class RoutesResource extends Resource
                                 'unique' => 'name - name (type: unique) constraint failed',
                                 'regex' => 'The name can be any string containing characters, letters, numbers, or the following characters: ., -, _, or ~. Do not use spaces.'
                             ])
-                            ->unique(ignoreRecord:true)
+                            ->unique(ignoreRecord: true)
                             ->placeholder('Enter a unique name'),
                         Select::make('gateway_id')
                             ->label('Service')
@@ -74,61 +74,24 @@ class RoutesResource extends Resource
                     ->description('Route configuration determines how this route will handle incoming requests')
                     ->aside()
                     ->schema([
-                        Select::make('protocol')
-                            ->label('Protocols')
-                            ->hintIcon('heroicon-m-information-circle')
-                            ->hintIconTooltip('Routes have a protocols property to restrict the client protocol they should listen for.')
+                        TextInput::make('port')
+                            ->label('Port')
+                            ->numeric(),
+                        TextInput::make('paths')
+                            ->regex('/\//')
+                            ->validationMessages([
+                                'regex' => 'path - invalid path: must begin with `/` and should not include characters outside of the reserved list of RFC 3986'
+                            ]),
+                        Select::make('path_type')
+                            ->label('Path Type')
                             ->options([
-                                'GRPC' => 'GRPC',
-                                'GRPCS' => 'GRPCS',
-                                'GRPC, GRPCS' => 'GRPC, GRPCS',
-                                'HTTP' => 'HTTP',
-                                'HTTPS' => 'HTTPS',
-                                'HTTP, HTTPS' => 'HTTP, HTTPS',
-                                'TCP' => 'TCP',
-                                'TLS' => 'TLS',
-                                'TLS, UDP' => 'TLS, UDP',
-                                'TCP, UDP' => 'TCP, UDP',
-                                'TCP, TLS' => 'TCP, TLS',
-                                'TCP, TLS, UDP' => 'TCP, TLS, UDP',
-                                'TLS_PASSTHROUGH' => 'TLS_PASSTHROUGH',
-                                'UDP' => 'UDP',
-                                'WS' => 'WS',
-                                'WSS' => 'WSS',
-                                'WS, WSS' => 'WS, WSS',
-                            ])
-                            ->required()
-                            ->default('HTTP, HTTPS'),
+                                'prefix' => 'Prefix',
+                                'fixed' => 'Fixed'
+                            ]),
                         Tabs::make('Tabs')
                             ->tabs([
                                 Tabs\Tab::make('Traditional')
                                     ->schema([
-                                        Toggle::make('routing1')
-                                            ->label('Paths')
-                                            ->reactive()
-                                            ->default(false),
-                                        Repeater::make('paths')
-                                            ->simple(
-                                                TextInput::make('paths')
-                                                    ->regex('/\//')
-                                                    ->validationMessages([
-                                                        'regex' => 'path - invalid path: must begin with `/` and should not include characters outside of the reserved list of RFC 3986'
-                                                    ])
-                                            )
-                                            ->label('Paths')
-                                            ->addActionLabel('Add Paths')
-                                            ->visible(fn(Get $get) => $get('routing1') === true),
-                                        Toggle::make('routing2')
-                                            ->label('Hosts')
-                                            ->reactive()
-                                            ->default(false),
-                                        Repeater::make('hosts')
-                                            ->simple(
-                                                TextInput::make('hosts')
-                                            )
-                                            ->label('Hosts')
-                                            ->addActionLabel('Add Hosts')
-                                            ->visible(fn(Get $get) => $get('routing2') === true),
                                         Toggle::make('routing3')
                                             ->label('Methods')
                                             ->reactive()

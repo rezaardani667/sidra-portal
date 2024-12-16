@@ -16,10 +16,10 @@ return new class extends Migration
             $table->uuid('gateway_id');
             $table->string('name')->nullable();
             $table->string('tags')->nullable();
-            $table->string('protocol')->nullable();
-            $table->string('hosts')->nullable();
             $table->string('methods')->nullable();
             $table->string('paths')->nullable();
+            $table->string('path_type')->nullable();
+            $table->integer('port')->nullable();
             $table->string('snis')->nullable();
             $table->string('headers')->nullable();
             $table->text('expression')->nullable();

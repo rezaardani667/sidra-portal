@@ -16,10 +16,10 @@ class Route extends Model
     protected $fillable = [
         'name',
         'tags',
-        'protocol',
-        'hosts',
         'methods',
         'paths',
+        'path_type',
+        'port',
         'snis',
         'headers',
         'expression',
