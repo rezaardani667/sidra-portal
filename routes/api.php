@@ -24,4 +24,5 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::prefix('v1')->group(function () {
     Route::get('/config/{gateway_id}', [GatewayConfigController::class, 'config']);
     Route::post('/gateway-service/register', [GatewayServiceController::class, 'register']);
+    Route::get('/get/gs/{data_plane_id}', [GatewayServiceController::class, 'getGatewayServices']);
 });

@@ -2,17 +2,35 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\DataPlaneNodes;
 use App\Models\GatewayService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
 class GatewayServiceController extends Controller
 {
+    public function getGatewayServices($data_plane_id)
+    {
+        $gatewayServices = GatewayService::where('data_plane_id', $data_plane_id)->pluck('id');
+
+        if ($gatewayServices->isEmpty()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No gateway services found for the given data_plane_id.',
+            ], 404);
+        }
+
+        return response()->json([
+            'success' => true,
+            'gateway_service_ids' => $gatewayServices,
+        ]);
+    }
+
     public function register(Request $request)
     {
         $id = $request->input('id');
 
-        $existingRecord = GatewayService::where('id', $id)->first();
+        $existingRecord = DataPlaneNodes::where('id', $id)->first();
 
         if (!$existingRecord) {
             return response()->json([
