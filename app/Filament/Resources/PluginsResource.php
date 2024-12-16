@@ -41,6 +41,17 @@ class PluginsResource extends Resource
             ->schema([
                 Section::make()
                     ->schema([
+                        Select::make('type_plugin')
+                            ->label('Plugin')
+                            ->searchable()
+                            ->options([
+                                'Basic Auth' => 'Basic Auth',
+                                'Rate Limit' => 'Rate Limit',
+                                'Whitelist' => 'Whitelist',
+                                'JWT' => 'JWT',
+                                'Cache' => 'Cache',
+                                'RSA' => 'RSA',
+                            ]),
                         Toggle::make('enabled')
                             ->label('This plugin is Enabled')
                             ->onIcon('heroicon-o-power')
@@ -84,19 +95,9 @@ class PluginsResource extends Resource
                         TextInput::make('name')
                             ->label('Name')
                             ->columns(1),
-                        Select::make('type_plugin')
-                            ->label('Plugin')
-                            ->columns(1)
-                            ->options([
-                                'Basic Auth' => 'Basic Auth',
-                                'Rate Limit' => 'Rate Limit',
-                                'Whitelist' => 'Whitelist',
-                                'JWT' => 'JWT',
-                                'Cache' => 'Cache',
-                                'RSA' => 'RSA',
-                            ]),
+                        
                     ])
-                    ->columns(2),
+                    ->columns(1),
                 Section::make('Plugin Configuration')
                     ->description('Configuration parameters for this plugin. View advanced parameters for extended configuration.')
                     ->schema([
