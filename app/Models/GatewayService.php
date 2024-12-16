@@ -31,6 +31,14 @@ class GatewayService extends Model
     ];
 
     /**
+     * Relationship: Many GatewayServices belong to one DataPlaneNode.
+     */
+    public function dataPlaneNode()
+    {
+        return $this->belongsTo(DataPlaneNodes::class, 'data_plane_id');
+    }
+
+    /**
      * Relasi dengan tabel Routes
      */
     public function routes()

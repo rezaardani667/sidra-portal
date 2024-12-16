@@ -13,7 +13,8 @@ return new class extends Migration
     {
         Schema::create('gateway_services', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->string('name')->unique();;
+            $table->uuid('data_plane_id');
+            $table->string('name')->unique();
             $table->string('tags')->nullable();
             $table->string('upstream_url')->nullable();
             $table->string('protocol')->nullable();
@@ -21,8 +22,6 @@ return new class extends Migration
             $table->string('path')->nullable();
             $table->integer('port')->nullable();
             $table->boolean('enabled')->default(true);
-            $table->text('public_key')->nullable();
-            $table->text('private_key')->nullable();
             $table->timestamps();
 
             // Advanced Fields
@@ -32,6 +31,8 @@ return new class extends Migration
             $table->integer('read_timeout');
             $table->text('ca_certificates')->nullable();
             $table->text('client_certificate')->nullable();
+
+            $table->foreign('data_plane_id')->references('id')->on('data_plane_nodes')->onDelete('cascade');
         });
     }
 

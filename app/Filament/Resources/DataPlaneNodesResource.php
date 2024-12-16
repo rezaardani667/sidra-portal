@@ -39,7 +39,7 @@ class DataPlaneNodesResource extends Resource
                     ->description('This will determine how your Gateway will handle traffic and data.')
                     ->aside()
                     ->schema([
-                        Radio::make('deploy_gateway')
+                        Radio::make('deployment_models')
                             ->label('')
                             ->options([
                                 'serverles' => 'Serverles',
@@ -93,9 +93,10 @@ class DataPlaneNodesResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('control_planes')
-                    ->label('Control Planes'),
-                TextColumn::make('type')
+                TextColumn::make('name')
+                    ->label('Control Planes')
+                    ->description(fn(DataPlaneNodes $record): string => $record->description),
+                TextColumn::make('deployment_models')
                     ->label('Type'),
                 TextColumn::make('data_plane_nodes')
                     ->label('Data Plane Nodes'),
