@@ -14,13 +14,11 @@ class GatewayService extends Model
     protected $table = 'gateway_services';
 
     protected $fillable = [
+        'data_plane_id',
         'name',
         'tags',
-        'upstream_url',
         'protocol',
         'host',
-        'path',
-        'port',
         'public_key',
         'connect_timeout',
         'read_timeout',
