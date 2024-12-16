@@ -161,10 +161,6 @@ class GatewayServicesResource extends Resource
                     ->label('Protocol'),
                 TextColumn::make('host')
                     ->label('Host'),
-                TextColumn::make('port')
-                    ->label('Port'),
-                TextColumn::make('path')
-                    ->label('Path'),
                 ToggleColumn::make('enabled')
                     ->label('Enabled'),
                 TextColumn::make('tags')

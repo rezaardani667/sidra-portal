@@ -22,7 +22,7 @@ class GatewayServiceController extends Controller
 
         return response()->json([
             'success' => true,
-            'gateway_service_ids' => $gatewayServices,
+            'gateway_service_id' => $gatewayServices,
         ]);
     }
 
