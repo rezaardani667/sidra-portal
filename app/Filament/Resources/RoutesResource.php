@@ -205,8 +205,8 @@ class RoutesResource extends Resource
                     ->badge()
                     ->color('gray')
                     ->separator(','),
-                TextColumn::make('hosts')
-                    ->label('Hosts')
+                TextColumn::make('gatewayService.host')
+                    ->label('Host')
                     ->badge()
                     ->color('gray')
                     ->separator(','),
