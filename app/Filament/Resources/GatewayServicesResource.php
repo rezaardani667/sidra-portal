@@ -201,6 +201,7 @@ class GatewayServicesResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\ViewAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -229,6 +230,7 @@ class GatewayServicesResource extends Resource
         return [
             'index' => Pages\ListGatewayServices::route('/'),
             'create' => Pages\CreateGatewayServices::route('/create'),
+            'view' => Pages\ViewGatewayServices::route('/{record}'),
             'edit' => Pages\EditGatewayServices::route('/{record}/edit'),
         ];
     }
