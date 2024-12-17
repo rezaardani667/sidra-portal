@@ -76,6 +76,7 @@ class PluginsResource extends Resource
                             ->label('Service')
                             ->placeholder('Select a service')
                             ->searchable()
+                            ->reactive()
                             ->visible(fn(Get $get) => $get('plugin') === 'scoped')
                             ->options(
                                 \App\Models\GatewayService::all()->mapWithKeys(function ($service) {
@@ -87,15 +88,16 @@ class PluginsResource extends Resource
                             ->placeholder('Select a Routes')
                             ->searchable()
                             ->visible(fn(Get $get) => $get('plugin') === 'scoped')
-                            ->options(
-                                Route::all()->mapWithKeys(function ($routes) {
+                            ->options(function (Get $get) {
+                                $gatewayId = $get('gateway_id');
+                                $routes = Route::where('gateway_id', $gatewayId)->get()->mapWithKeys(function ($routes) {
                                     return [$routes->id => "{$routes->name} - {$routes->id}"];
-                                })->toArray()
-                            ),
+                                })->toArray();
+                                return [ -1  => 'Any Routes'] + $routes;
+                            }),
                         TextInput::make('name')
                             ->label('Name')
                             ->columns(1),
-                        
                     ])
                     ->columns(1),
                 Section::make('Plugin Configuration')

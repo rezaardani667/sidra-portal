@@ -29,6 +29,11 @@ class CreatePlugins extends CreateRecord
         ];
     }
 
+    protected function mutateFormDataBeforeCreate(array $data): array
+    {
+        return $data;
+    }
+
     protected function afterCreate(): void
     {
         PluginsResource::setAppliedTo($this->getRecord());

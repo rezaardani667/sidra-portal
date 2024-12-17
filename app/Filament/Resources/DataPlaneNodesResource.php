@@ -26,10 +26,7 @@ class DataPlaneNodesResource extends Resource
 {
     protected static ?string $model = DataPlaneNodes::class;
 
-    protected static ?int $navigationSort = 2;
-
     protected static ?string $navigationIcon = 'heroicon-o-inbox-stack';
-    protected static ?string $navigationGroup = 'Gateway Manager';
 
     public static function form(Form $form): Form
     {
@@ -100,8 +97,9 @@ class DataPlaneNodesResource extends Resource
                     ->label('Type'),
                 TextColumn::make('data_plane_nodes')
                     ->label('Data Plane Nodes'),
-                TextColumn::make('service')
-                    ->label('Services'),
+                TextColumn::make('gatewayServices')
+                    ->label('Services')
+                    ->getStateUsing(fn(DataPlaneNodes $record): int => $record->gatewayServices()->count()),
                 ToggleColumn::make('analytics')
                     ->label('Analytics'),
                 TextColumn::make('labels')

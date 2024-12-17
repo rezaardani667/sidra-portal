@@ -200,7 +200,7 @@ class RoutesResource extends Resource
                 TextColumn::make('name')
                     ->label('Name')
                     ->weight(FontWeight::Bold),
-                TextColumn::make('protocol')
+                TextColumn::make('gatewayService.protocol')
                     ->label('Protocols')
                     ->badge()
                     ->color('gray')
