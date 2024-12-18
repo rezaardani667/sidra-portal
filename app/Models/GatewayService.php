@@ -49,7 +49,9 @@ class GatewayService extends Model
      */
     public function plugins()
     {
-        return $this->hasMany(Plugin::class, 'gateway_id');
+        return $this->belongsToMany(Plugin::class, 'plugin_route', 'gateway_id', 'plugins_id')
+        ->using(PluginServiceRoute::class)      
+        ->withTimestamps();
     }
 
     /**

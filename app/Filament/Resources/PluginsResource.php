@@ -4,8 +4,10 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\PluginsResource\Pages;
 use App\Filament\Resources\PluginsResource\RelationManagers;
+use App\Models\GatewayService;
 use App\Models\Plugin;
 use App\Models\Plugins;
+use App\Models\PluginServiceRoute;
 use App\Models\Route;
 use Filament\Forms;
 use Filament\Forms\Components\Checkbox;
@@ -57,44 +59,32 @@ class PluginsResource extends Resource
                             ->onIcon('heroicon-o-power')
                             ->offIcon('heroicon-o-power')
                             ->default(true),
-                        Radio::make('plugin')
-                            ->label('')
-                            ->reactive()
-                            ->required()
-                            ->inline()
-                            ->inlineLabel(false)
-                            ->columnSpanFull()
-                            ->options([
-                                'global' => 'Global',
-                                'scoped' => 'Scoped'
-                            ])
-                            ->descriptions([
-                                'global' => 'All services, routes, and consumers',
-                                'scoped' => 'Specific Gateway Services and/or Routes'
-                            ]),
-                        Select::make('gateway_id')
+                        Select::make('gatewayService')
                             ->label('Service')
                             ->placeholder('Select a service')
-                            ->searchable()
                             ->reactive()
-                            ->visible(fn(Get $get) => $get('plugin') === 'scoped')
-                            ->options(
-                                \App\Models\GatewayService::all()->mapWithKeys(function ($service) {
+                            ->options(function (Get $get) {
+                                $services = GatewayService::all()->mapWithKeys(function ($service) {
                                     return [$service->id => "{$service->name} - {$service->id}"];
-                                })->toArray()
-                            ),
-                        Select::make('routes_id')
+                                })->toArray();
+
+                                return [-1  => 'Any Service'] + $services;
+                            })
+                            ->default(-1)
+                            ->afterStateUpdated(function (callable $set, Get $get) {
+                                $set('routes_id', -1);
+                            }),
+                        Select::make('routes')
                             ->label('Routes')
                             ->placeholder('Select a Routes')
-                            ->searchable()
-                            ->visible(fn(Get $get) => $get('plugin') === 'scoped')
                             ->options(function (Get $get) {
-                                $gatewayId = $get('gateway_id');
+                                $gatewayId = $get('gatewayService');
                                 $routes = Route::where('gateway_id', $gatewayId)->get()->mapWithKeys(function ($routes) {
                                     return [$routes->id => "{$routes->name} - {$routes->id}"];
                                 })->toArray();
-                                return [ -1  => 'Any Routes'] + $routes;
-                            }),
+                                return [-1  => 'Any Routes'] + $routes;
+                            })
+                            ->default(-1),
                         TextInput::make('name')
                             ->label('Name')
                             ->columns(1),

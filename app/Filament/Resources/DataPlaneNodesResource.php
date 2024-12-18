@@ -39,16 +39,12 @@ class DataPlaneNodesResource extends Resource
                         Radio::make('deployment_models')
                             ->label('')
                             ->options([
-                                'serverles' => 'Serverles',
-                                'dedicated_cloud' => 'Dedicated Cloud',
-                                'self_managed_hybrid' => 'Self-Managed Hybrid',
-                                'kubernetes_ingress_controller' => 'Kubernetes Ingress Controller'
+                                'standalone' => 'Standalone',
+                                'kubernetes' => 'Kubernetes'
                             ])
                             ->descriptions([
-                                'serverles' => 'For learning and development',
-                                'dedicated_cloud' => 'For production and scale deployed as a single-tenant solution',
-                                'self_managed_hybrid' => 'For flexibility and customized deployment in any environment',
-                                'kubernetes_ingress_controller' => 'For traffic management native to Kubernetes'
+                                'standalone' => 'For isolated and independent deployment',
+                                'kubernetes' => 'For traffic management native to Kubernetes'
                             ])
                             ->default('serverles'),
                     ]),

@@ -28,18 +28,22 @@ class Plugin extends Model
         'protocols' => 'array',
     ];
 
-    public function gatewayService()
-    {
-        return $this->belongsTo(GatewayService::class, 'gateway_id');
-    }
-
     public function consumers()
     {
         return $this->hasMany(Consumer::class);
     }
 
+    public function gatewayService()
+    {
+        return $this->belongsToMany(GatewayService::class, 'plugin_service_route', 'plugins_id', 'gateway_id')
+        ->using(PluginServiceRoute::class)      
+        ->withTimestamps();
+    }
+
     public function routes()
     {
-        return $this->hasMany(Route::class, 'route_id');
+        return $this->belongsToMany(Route::class, 'plugin_service_route', 'plugins_id', 'routes_id')
+        ->using(PluginServiceRoute::class)      
+        ->withTimestamps();
     }
 }

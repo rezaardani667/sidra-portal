@@ -67,12 +67,15 @@ class GatewayConfigController extends Controller
 
             return [
                 'id' => $route->id,
+                'gateway_id' => $route->gateway_id,
                 'name' => $route->name,
                 'tags' => $route->tags,
                 'methods' => $route->methods,
-                'paths' => $route->path,
+                'upstream_host' => $route->gatewayService->name,
+                'upstream_port' => $route->port,
+                'path' => $route->paths,
                 'path_type' => $route->path_type,
-                'port' => $route->port,
+                'expression' => $route->expression,
                 'created_at' => $route->created_at,
                 'updated_at' => $route->updated_at,
                 'plugins' => $routePlugins
@@ -90,6 +93,9 @@ class GatewayConfigController extends Controller
     private function successResponse($routesWithPlugins, $gatewayService)
     {
         return response()->json([
+            'GatewayService' => [
+                'host' => $gatewayService->host,
+            ],
             'Routes' => $routesWithPlugins,
             'Consumers' => $gatewayService->consumers,
             'Plugins' => $this->transformPlugins($gatewayService->plugins)

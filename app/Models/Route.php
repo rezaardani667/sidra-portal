@@ -48,7 +48,9 @@ class Route extends Model
 
     public function plugins()
     {
-        return $this->hasMany(Plugin::class, 'plugin_id');
+        return $this->belongsToMany(Plugin::class, 'plugin_route', 'routes_id', 'plugins_id')
+        ->using(PluginServiceRoute::class)      
+        ->withTimestamps();
     }
 
 }
