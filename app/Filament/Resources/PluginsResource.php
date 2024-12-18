@@ -150,6 +150,7 @@ class PluginsResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\ViewAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -178,6 +179,7 @@ class PluginsResource extends Resource
         return [
             'index' => Pages\ListPlugins::route('/'),
             'create' => Pages\CreatePlugins::route('/create'),
+            'view' => Pages\ViewPlugins::route('/{record}'),
             'edit' => Pages\EditPlugins::route('/{record}/edit'),
         ];
     }
