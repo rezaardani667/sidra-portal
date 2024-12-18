@@ -233,6 +233,7 @@ class RoutesResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\ViewAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -261,6 +262,7 @@ class RoutesResource extends Resource
         return [
             'index' => Pages\ListRoutes::route('/'),
             'create' => Pages\CreateRoutes::route('/create'),
+            'view' => Pages\ViewRoutes::route('/{record}'),
             'edit' => Pages\EditRoutes::route('/{record}/edit'),
         ];
     }
