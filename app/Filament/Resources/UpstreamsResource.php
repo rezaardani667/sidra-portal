@@ -31,8 +31,6 @@ class UpstreamsResource extends Resource
 
     public static function form(Form $form): Form
     {
-        //@todo: name, upstream host, upstream port dan model migration disesuaikan
-        // (Load balancing disimpan untuk back up)
         return $form
             ->schema([
                 Section::make('General Information')
@@ -44,8 +42,14 @@ class UpstreamsResource extends Resource
                             ->placeholder('Enter or select a host')
                             ->required(),
 
-                        TextInput::make('host_header')
-                            ->label('Host Header')
+                        TextInput::make('upstream_host')
+                            ->label('Upstream Host')
+                            ->placeholder('Enter the upstream host')
+                            ->required(),
+
+                        TextInput::make('upstream_port')
+                            ->label('Upstream Port')
+                            ->placeholder('Enter the upstream port')
                             ->required(),
 
                         TextInput::make('client_certificate')
@@ -57,7 +61,7 @@ class UpstreamsResource extends Resource
                             ->placeholder('Enter a list of tags separated by comma')
                             ->helperText('e.g. tag1, tag2, tag3'),
                     ]),
-                ]);
+            ]);
     }
 
     public static function table(Table $table): Table
@@ -66,24 +70,14 @@ class UpstreamsResource extends Resource
             ->columns([
                 TextColumn::make('name')
                     ->label('Name'),
-                TextColumn::make('host_header')
-                    ->label('Host Header'),
+                TextColumn::make('upstream_host')
+                    ->label('Upstream Host'),
+                TextColumn::make('upstream_port')
+                    ->label('Upstream Port'),
                 TextColumn::make('client_certificate')
                     ->label('Client Certificate'),
                 TextColumn::make('tags')
                     ->label('Tags'),
-                TextColumn::make('algorithm')
-                    ->label('Algorithm'),
-                TextColumn::make('slots')
-                    ->label('Slots'),
-                TextColumn::make('hash_on')
-                    ->label('Hash on'),
-                TextColumn::make('hash_fallback')
-                    ->label('Hash Fallback'),
-                TextColumn::make('health_checks')
-                    ->label('Active Health Checks'),
-                TextColumn::make('healthchecks_threshold')
-                    ->label('Healthchecks Threshold')
             ])
             ->filters([
                 //

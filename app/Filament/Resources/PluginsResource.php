@@ -9,6 +9,7 @@ use App\Models\GatewayService;
 use App\Models\Plugin;
 use App\Models\Plugins;
 use App\Models\PluginServiceRoute;
+use App\Models\PluginType;
 use App\Models\Route;
 use Faker\Provider\ar_EG\Text;
 use Filament\Forms;
@@ -30,9 +31,8 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Support\Facades\DB;
 use Psy\VersionUpdater\Checker;
-
-use function Laravel\Prompts\select;
 
 class PluginsResource extends Resource
 {
@@ -46,21 +46,12 @@ class PluginsResource extends Resource
         return $form
             ->schema([
                 Section::make()
-                //@todo: type plugin ambil dari db (option), buat migration (type_plugin = id, name, config)
                     ->schema([
                         Select::make('type_plugin')
                             ->label('Plugin')
                             ->searchable()
                             ->reactive()
-                            ->options([
-                                'basic_auth' => 'Basic Auth',
-                                'rate_limit' => 'Rate Limit',
-                                'jwt' => 'JWT',
-                                'whitelist' => 'Whitelist',
-                                'azure_jwt' => 'Azure JWT',
-                                'cache' => 'Cache',
-                                'rsa' => 'RSA',
-                            ]),
+                            ->options(PluginType::all()->pluck('name', 'id')),
                         Toggle::make('enabled')
                             ->label('This plugin is Enabled')
                             ->onIcon('heroicon-o-power')
@@ -103,22 +94,28 @@ class PluginsResource extends Resource
                                 return [-1  => 'Any Routes'] + $routes;
                             })
                             ->default(-1),
-                        Select::make('consumer_id')
+                        Select::make('consumers_id')
                             ->label('Consumer')
                             ->placeholder('Select a consumer')
                             ->visible(fn(Get $get) => $get('apply_to') === 'consumer')
-                            ->options(function (Get $get) {
-                                $consumers = Consumer::all()->mapWithKeys(function ($consumer) {
-                                    return [$consumer->id => "{$consumer->username} - {$consumer->id}"];
-                                })->toArray();
-                                return $consumers;
-                            }),
+                            ->options(Consumer::all()->pluck('username', 'id')),
                         TextInput::make('name')
                             ->label('Name')
                             ->columns(1),
-                        //@todo: config ambil dari db sesuai yang di input foreach textinput
-                        ]),
-                ]);
+                    ]),
+                Section::make('Plugin Configuration')
+                    ->description('Configuration parameters for this plugin. View advanced parameters for extended configuration.')
+                    ->schema([
+                        ...collect(DB::table('plugin_types')->get())->map(function ($plugin_types) {
+                            $configs = explode(',', $plugin_types->config);
+                            return collect($configs)->map(function ($config) use ($plugin_types) {
+                                return TextInput::make($config)
+                                    ->label($config ?? ucfirst($config))
+                                    ->visible(fn(Get $get) => $get('type_plugin') === $plugin_types->id);
+                            })->toArray();
+                        })->flatten()->toArray(),
+                    ]),
+            ]);
     }
 
     public static function table(Table $table): Table

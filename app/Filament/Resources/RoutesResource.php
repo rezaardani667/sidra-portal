@@ -75,8 +75,12 @@ class RoutesResource extends Resource
                     ->aside()
                     ->schema([
                         Select::make('upstream_url')
-                            ->label('Upstream Url'),
-                        //@Todo: option ambil dari upstream host+port (localhost:8080)
+                            ->label('Upstream Url')
+                            ->options(
+                                \App\Models\Upstream::all()->mapWithKeys(function ($upstream) {
+                                    return ["{$upstream->upstream_host}:{$upstream->upstream_port}" => "{$upstream->upstream_host}:{$upstream->upstream_port}"];
+                                })->toArray()
+                            ),
                         TextInput::make('paths')
                             ->regex('/\//')
                             ->validationMessages([

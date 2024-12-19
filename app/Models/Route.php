@@ -19,7 +19,7 @@ class Route extends Model
         'methods',
         'paths',
         'path_type',
-        'port',
+        'upstream_url',
         'snis',
         'headers',
         'expression',

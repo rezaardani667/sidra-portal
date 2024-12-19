@@ -39,8 +39,33 @@ class CreatePlugins extends CreateRecord
 
     protected function handleRecordCreation(array $data): Model
     {
+        $typePluginId = $data['type_plugin'];
+
+        $pluginType = DB::table('plugin_types')->find($typePluginId);
+
+        $configs = [];
+        if ($pluginType && $pluginType->config) {
+            $configKeys = explode(',', $pluginType->config);
+            foreach ($configKeys as $key) {
+                if (isset($data[$key])) {
+                    $configs[$key] = $data[$key];
+                }
+            }
+        }
+
+        $data['config'] = json_encode($configs);
+
         $plugin = parent::handleRecordCreation($data);
 
+        if ($data['apply_to'] === 'service_routes') {
+            $this->createServiceRoutes($plugin, $data);
+        }
+
+        return $plugin;
+    }
+
+    protected function createServiceRoutes(Plugin $plugin, array $data): void
+    {
         if ($data['gatewayService'] == -1 && $data['routes'] == -1) {
             $services = GatewayService::all();
             foreach ($services as $service) {
@@ -69,8 +94,6 @@ class CreatePlugins extends CreateRecord
                 'gateway_id' => $data['gatewayService'],
             ]);
         }
-
-        return $plugin;
     }
 
     protected function afterCreate(): void

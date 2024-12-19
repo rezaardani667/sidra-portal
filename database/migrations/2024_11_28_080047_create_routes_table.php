@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('methods')->nullable();
             $table->string('paths')->nullable();
             $table->string('path_type')->nullable();
-            $table->integer('port')->nullable();
+            $table->string('upstream_url')->nullable();
             $table->string('snis')->nullable();
             $table->string('headers')->nullable();
             $table->text('expression')->nullable();

@@ -32,7 +32,6 @@ class ConsumersResource extends Resource
     public static function form(Form $form): Form
     {
         return $form
-        //@todo: tagsnya dihapus saja, nanti consumer digunakan di plugin
             ->schema([
                 Section::make('General Information')
                     ->description('General information will help identify and manage added consumer.')
@@ -53,8 +52,7 @@ class ConsumersResource extends Resource
                         TextInput::make('tags')
                             ->label('Tags')
                             ->placeholder('Enter a list of tags separated by comma')
-                            ->helperText('e.g. tag1, tag2, tag3')
-                            ->required(),
+                            ->helperText('e.g. tag1, tag2, tag3'),
                     ]),
             ]);
     }

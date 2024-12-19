@@ -18,7 +18,6 @@ class Consumer extends Model
         'custom_id',
         'tags',
         'gateway_id',
-        'plugin_id',
     ];
 
     /**

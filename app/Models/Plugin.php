@@ -16,6 +16,7 @@ class Plugin extends Model
     protected $fillable = [
         'name',
         'type_plugin',
+        'consumers_id',
         'enabled',
         'config',
         'protocols',
@@ -26,6 +27,7 @@ class Plugin extends Model
 
     protected $casts = [
         'protocols' => 'array',
+        'config' => 'array',
     ];
 
     public function consumers()
