@@ -95,9 +95,6 @@ class ViewGatewayServices extends ViewRecord
                                 TextEntry::make('host')
                                     ->label('Host')
                                     ->inlineLabel(),
-                                TextEntry::make('port')
-                                    ->label('Port')
-                                    ->inlineLabel(),
                                 TextEntry::make('protocol')
                                     ->label('Protocol')
                                     ->inlineLabel(),

@@ -37,15 +37,19 @@ class ViewPlugins extends ViewRecord
                         TextEntry::make('id')
                             ->label('ID')
                             ->badge()
+                            ->inlineLabel()
                             ->icon('heroicon-m-document-duplicate')
                             ->iconPosition(IconPosition::After)
                             ->copyable(),
                         TextEntry::make('type_plugin')
-                            ->label('Type Plugin')
+                            ->label(' ')
                             ->badge()
+                            ->inlineLabel()
                             ->color('gray'),
                         TextEntry::make('ordering')
-                            ->label('Ordering')
+                            ->label('Ordering:')
+                            ->badge()
+                            ->inlineLabel()
                     ])
                     ->columns(3),
                 Tabs::make('Tabs')

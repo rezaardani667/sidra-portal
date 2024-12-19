@@ -111,16 +111,20 @@ class ViewRoutes extends ViewRecord
                                     ->inlineLabel(),
                                 TextEntry::make('strip_path')
                                     ->label('Strip Path')
-                                    ->inlineLabel(),
+                                    ->inlineLabel()
+                                    ->formatStateUsing(fn(string $state): string => $state === '1' ? 'true' : 'false'),
                                 TextEntry::make('preserve_host')
                                     ->label('Preserve Host')
-                                    ->inlineLabel(),
+                                    ->inlineLabel()
+                                    ->formatStateUsing(fn(string $state): string => $state === '1' ? 'true' : 'false'),
                                 TextEntry::make('request_buffering')
                                     ->label('Request Buffering')
-                                    ->inlineLabel(),
+                                    ->inlineLabel()
+                                    ->formatStateUsing(fn(string $state): string => $state === '1' ? 'true' : 'false'),
                                 TextEntry::make('response_buffering')
                                     ->label('Response Buffering')
-                                    ->inlineLabel(),
+                                    ->inlineLabel()
+                                    ->formatStateUsing(fn(string $state): string => $state === '1' ? 'true' : 'false'),
                                 TextEntry::make('path_handling')
                                     ->label('Path Handling')
                                     ->inlineLabel()
