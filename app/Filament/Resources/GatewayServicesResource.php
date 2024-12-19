@@ -45,12 +45,12 @@ class GatewayServicesResource extends Resource
                     ->aside()
                     ->schema([
                         Select::make('data_plane_id')
-                        ->label('Data Plane Nodes')
-                        ->options(
-                            DataPlaneNodes::all()->mapWithKeys(function ($service) {
-                                return [$service->id => "{$service->name} - {$service->id}"];
-                            })->toArray()
-                        ),
+                            ->label('Data Plane Nodes')
+                            ->options(
+                                DataPlaneNodes::all()->mapWithKeys(function ($service) {
+                                    return [$service->id => "{$service->name} - {$service->id}"];
+                                })->toArray()
+                            ),
                         TextInput::make('name')
                             ->label('Name')
                             ->placeholder('Enter a unique name')
@@ -59,7 +59,7 @@ class GatewayServicesResource extends Resource
                                 'unique' => 'name - name (type: unique) constraint failed',
                                 'regex' => 'The name can be any string containing characters, letters, numbers, or the following characters: ., -, _, or ~. Do not use spaces.'
                             ])
-                            ->unique(ignoreRecord:true)
+                            ->unique(ignoreRecord: true)
                             ->required()
                             ->hintIcon('heroicon-m-information-circle')
                             ->hintIconTooltip('The Service name'),
@@ -75,7 +75,6 @@ class GatewayServicesResource extends Resource
                     ->description('Define the endpoint for this service by specifying the full URL or by its separate elements.')
                     ->aside()
                     ->schema([
-                        
                         Select::make('protocol')
                             ->label('Protocol')
                             ->default('http')
@@ -102,51 +101,52 @@ class GatewayServicesResource extends Resource
                                     'wss' => 'wss',
                                 ]
                             ]),
+                            
                         TextInput::make('domain')
                             ->label('Domain')
                             ->required()
                             ->placeholder('Enter a domain'),
-                        
+
+                        Section::make('View Advanced Fields')
+                            ->schema([
+                                TextInput::make('retries')
+                                    ->label('Retries')
+                                    ->hintIcon('heroicon-m-information-circle')
+                                    ->hintIconTooltip('The number of retries to execute upon failure to proxy.')
+                                    ->default('5'),
+                                TextInput::make('connect_timeout')
+                                    ->label('Connection Timeout')
+                                    ->hintIcon('heroicon-m-information-circle')
+                                    ->hintIconTooltip('The timeout in milliseconds for establishing a connection to the upstream server.')
+                                    ->default('60000'),
+                                TextInput::make('write_timeout')
+                                    ->label('Write Timeout')
+                                    ->hintIcon('heroicon-m-information-circle')
+                                    ->hintIconTooltip('The timeout in milliseconds between two successive write operations for transmitting a request to the upstream server.')
+                                    ->default('60000'),
+                                TextInput::make('read_timeout')
+                                    ->label('Read Timeout')
+                                    ->hintIcon('heroicon-m-information-circle')
+                                    ->hintIconTooltip('The timeout in milliseconds between two successive read operations for transmitting a request to the upstream server.')
+                                    ->default('60000'),
+                                TextInput::make('client_certificate')
+                                    ->label('Client Certificate')
+                                    ->hintIcon('heroicon-m-information-circle')
+                                    ->hintIconTooltip('Certificate to be used as client certificate while TLS handshaking to the upstream server.')
+                                    ->placeholder('Enter a Certificate ID'),
+                                TextInput::make('ca_certificates')
+                                    ->label('CA Certificates')
+                                    ->hintIcon('heroicon-m-information-circle')
+                                    ->hintIconTooltip("Array of CA Certificate object UUIDs that are used to build the trust store while verifying upstream server's TLS certificate. If set to null when Nginx default is respected. If default CA list in Nginx are not specified and TLS verification is enabled, then handshake with upstream server will always fail (because no CA are trusted).")
+                                    ->placeholder('Enter a comma separated list of CA Certificate IDs'),
+                                Checkbox::make('tls_verify')
+                                    ->label('TLS Verify')
+                                    ->hintIcon('heroicon-m-information-circle')
+                                    ->hintIconTooltip('Whether to enable verification of upstream server TLS certificate. If set to null, then the Nginx default is respected.'),
+                            ])
+                            ->collapsed()
                     ]),
 
-                Section::make('View Advanced Fields')
-                    ->schema([
-                        TextInput::make('retries')
-                            ->label('Retries')
-                            ->hintIcon('heroicon-m-information-circle')
-                            ->hintIconTooltip('The number of retries to execute upon failure to proxy.')
-                            ->default('5'),
-                        TextInput::make('connect_timeout')
-                            ->label('Connection Timeout')
-                            ->hintIcon('heroicon-m-information-circle')
-                            ->hintIconTooltip('The timeout in milliseconds for establishing a connection to the upstream server.')
-                            ->default('60000'),
-                        TextInput::make('write_timeout')
-                            ->label('Write Timeout')
-                            ->hintIcon('heroicon-m-information-circle')
-                            ->hintIconTooltip('The timeout in milliseconds between two successive write operations for transmitting a request to the upstream server.')
-                            ->default('60000'),
-                        TextInput::make('read_timeout')
-                            ->label('Read Timeout')
-                            ->hintIcon('heroicon-m-information-circle')
-                            ->hintIconTooltip('The timeout in milliseconds between two successive read operations for transmitting a request to the upstream server.')
-                            ->default('60000'),
-                        TextInput::make('client_certificate')
-                            ->label('Client Certificate')
-                            ->hintIcon('heroicon-m-information-circle')
-                            ->hintIconTooltip('Certificate to be used as client certificate while TLS handshaking to the upstream server.')
-                            ->placeholder('Enter a Certificate ID'),
-                        TextInput::make('ca_certificates')
-                            ->label('CA Certificates')
-                            ->hintIcon('heroicon-m-information-circle')
-                            ->hintIconTooltip("Array of CA Certificate object UUIDs that are used to build the trust store while verifying upstream server's TLS certificate. If set to null when Nginx default is respected. If default CA list in Nginx are not specified and TLS verification is enabled, then handshake with upstream server will always fail (because no CA are trusted).")
-                            ->placeholder('Enter a comma separated list of CA Certificate IDs'),
-                        Checkbox::make('tls_verify')
-                            ->label('TLS Verify')
-                            ->hintIcon('heroicon-m-information-circle')
-                            ->hintIconTooltip('Whether to enable verification of upstream server TLS certificate. If set to null, then the Nginx default is respected.'),
-                    ])
-                    ->collapsed()
             ]);
     }
 

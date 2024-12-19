@@ -101,6 +101,12 @@ class PluginsResource extends Resource
                             ->options(Consumer::all()->pluck('username', 'id')),
                         TextInput::make('name')
                             ->label('Name')
+                            ->regex('/^\S*$/')
+                            ->validationMessages([
+                                'unique' => 'name - name (type: unique) constraint failed',
+                                'regex' => 'The name can be any string containing characters, letters, numbers, or the following characters: ., -, _, or ~. Do not use spaces.'
+                            ])
+                            ->unique(ignoreRecord: true)
                             ->columns(1),
                     ]),
                 Section::make('Plugin Configuration')
