@@ -127,4 +127,11 @@ class ViewRoutes extends ViewRecord
             RoutesChart::class,
         ];
     }
+
+    protected function getFooterWidgets(): array
+    {
+        return [
+            RoutesChart::class,
+        ];
+    }
 }
