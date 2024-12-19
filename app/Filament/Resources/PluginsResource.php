@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\PluginsResource\Pages;
 use App\Filament\Resources\PluginsResource\RelationManagers;
+use App\Models\Consumer;
 use App\Models\GatewayService;
 use App\Models\Plugin;
 use App\Models\Plugins;
@@ -65,10 +66,21 @@ class PluginsResource extends Resource
                             ->onIcon('heroicon-o-power')
                             ->offIcon('heroicon-o-power')
                             ->default(true),
+                        Radio::make('apply_to')
+                            ->label('Apply to')
+                            ->reactive()
+                            ->options([
+                                'service_routes' => 'Service and Routes',
+                                'consumer' => 'Consumer',
+                            ])
+                            ->default('service_routes')
+                            ->inline()
+                            ->inlineLabel(false),
                         Select::make('gatewayService')
                             ->label('Service')
                             ->placeholder('Select a service')
                             ->reactive()
+                            ->visible(fn(Get $get) => $get('apply_to') === 'service_routes')
                             ->options(function (Get $get) {
                                 $services = GatewayService::all()->mapWithKeys(function ($service) {
                                     return [$service->id => "{$service->name} - {$service->id}"];
@@ -82,6 +94,7 @@ class PluginsResource extends Resource
                         Select::make('routes')
                             ->label('Routes')
                             ->placeholder('Select a Routes')
+                            ->visible(fn(Get $get) => $get('apply_to') === 'service_routes')
                             ->options(function (Get $get) {
                                 $gatewayId = $get('gatewayService');
                                 $routes = Route::where('gateway_id', $gatewayId)->get()->mapWithKeys(function ($routes) {
@@ -90,234 +103,22 @@ class PluginsResource extends Resource
                                 return [-1  => 'Any Routes'] + $routes;
                             })
                             ->default(-1),
-                        //@todo: tambah consumer bisa di input (select ambil dari consumer)
+                        Select::make('consumer_id')
+                            ->label('Consumer')
+                            ->placeholder('Select a consumer')
+                            ->visible(fn(Get $get) => $get('apply_to') === 'consumer')
+                            ->options(function (Get $get) {
+                                $consumers = Consumer::all()->mapWithKeys(function ($consumer) {
+                                    return [$consumer->id => "{$consumer->username} - {$consumer->id}"];
+                                })->toArray();
+                                return $consumers;
+                            }),
                         TextInput::make('name')
                             ->label('Name')
                             ->columns(1),
                         //@todo: config ambil dari db sesuai yang di input foreach textinput
-                        Section::make('Plugin Configuration')
-                            ->description('Configuration parameters for this plugin. View advanced parameters for extended configuration.')
-                            ->visible(fn(Get $get) => $get('type_plugin') === 'jwt')
-                            ->schema([
-                                select::make('protocols')
-                                    ->label('Protocols')
-                                    ->multiple()
-                                    ->searchable()
-                                    ->hintIcon('heroicon-m-information-circle')
-                                    ->hintIconTooltip('A list of the request protocols that will trigger this plugin. The default value, as well as the possible values allowed on this field, may change depending on the plugin type.')
-                                    ->options([
-                                        'grpc' => 'grpc',
-                                        'grpcs' => 'grpcs',
-                                        'http' => 'http',
-                                        'https' => 'https',
-                                    ]),
-                                Checkbox::make('preflight')
-                                    ->label('Run On Preflight')
-                                    ->default(true),
-                                Checkbox::make('secret_is_base64')
-                                    ->label('Secret Is Base64'),
-                            ])->collapsible(),
-
-                        Section::make('View Advanced Paramenters')
-                            ->visible(fn(Get $get) => $get('type_plugin') === 'jwt')
-                            ->schema([
-                                TextInput::make('name')
-                                    ->label('Instanced Name'),
-                                TextInput::make('tags')
-                                    ->label('Tags')
-                                    ->placeholder('Enter list of tags')
-                                    ->helperText('e.g. tag1, tag2, tag3'),
-                                TextInput::make('anonymouse')
-                                    ->label('Anonymouse'),
-                                TextInput::make('verify')
-                                    ->label('Claims To Verify'),
-                                Repeater::make('Cookie Names')
-                                    ->simple(
-                                        TextInput::make('name')
-                                    ),
-                                Repeater::make('Header Names')
-                                    ->simple(
-                                        TextInput::make('name')
-                                    ),
-                                TextInput::make('key_claim_name')
-                                    ->label('Key Claim Name')
-                                    ->default('iss'),
-                                TextInput::make('maximum_expiration')
-                                    ->label('Maximum Expiration')
-                                    ->numeric(),
-                                TextInput::make('realm')
-                                    ->label('Realm'),
-                                Repeater::make('Uri Param Name')
-                                    ->simple(
-                                        TextInput::make('name')
-                                    )
-                            ])->collapsed(),
-                        Section::make('Request Limits')
-                            ->description('Set one or more limits on the number of API requests allowed within a defined timeframe.')
-                            ->visible(fn(Get $get) => $get('type_plugin') === 'rate_limit')
-                            ->schema([
-                                Radio::make('rate_limit')
-                                    ->label('Rate Limit Window Type')
-                                    ->options([
-                                        'sliding' => 'Sliding',
-                                        'fixed' => 'Fixed',
-                                    ])
-                                    ->default('sliding')
-                                    ->inline()
-                                    ->inlineLabel(false),
-                                Repeater::make('limit')
-                                    ->label('Limit')
-                                    ->schema([
-                                        TextInput::make('number')
-                                            ->label('')
-                                            ->columns(1)
-                                            ->placeholder('Request number'),
-                                        TextInput::make('time')
-                                            ->label('')
-                                            ->columns(1)
-                                            ->placeholder('Time interval')
-                                    ])
-                                    ->columns(2),
-                            ]),
-                        Select::make('identifiers')
-                            ->label('Identifiers ')
-                            ->required()
-                            ->options([
-                                'ip' => 'IP',
-                                'credential' => 'Credential',
-                                'consumer' => 'Consumer',
-                                'service' => 'Service',
-                                'header' => 'Header',
-                                'path' => 'Path',
-                                'consumer_group' => 'Consumer Group'
-                            ])
-                            ->visible(fn(Get $get) => $get('type_plugin') === 'rate_limit')
-                            ->default('consumer'),
-                        TextInput::make('error_message')
-                            ->label('Error Message')
-                            ->required()
-                            ->numeric()
-                            ->default('429')
-                            ->visible(fn(Get $get) => $get('type_plugin') === 'rate_limit')
-                    ]),
-                Section::make('View Advanced Field')
-                    ->visible(fn(Get $get) => $get('type_plugin') === 'rate_limit')
-                    ->schema([
-                        Select::make('protocols')
-                            ->label('Protocols')
-                            ->required()
-                            ->options([
-                                'grpc' => 'grpc',
-                                'grpcs' => 'grpcs',
-                                'http' => 'http',
-                                'https' => 'https',
-                            ]),
-                        TextInput::make('instance_name')
-                            ->label('Instance Name'),
-                        TextInput::make('tags')
-                            ->label('Tags')
-                            ->placeholder('Enter list of tags')
-                            ->helperText('e.g. tag1, tag2, tag3'),
-                        TextInput::make('compound_identifier')
-                            ->label('Compound Identifier'),
-                        TextInput::make('consumer_groups')
-                            ->label('Consumer Groups')
-                            ->placeholder('Enter list of Consumer Groups')
-                            ->helperText('e.g. group1, group2'),
-                        TextInput::make('dictionary_name')
-                            ->label('Dictionary Name')
-                            ->required()
-                            ->default('kong_rate_limiting_counters'),
-                        Checkbox::make('disable_penalty')
-                            ->label('Disable Penalty'),
-                        Checkbox::make('enforce_consumer_groups')
-                            ->label('Enforce Consumer Groups'),
-                        TextInput::make('header_name')
-                            ->label('Header Name'),
-                        Checkbox::make('client_headers')
-                            ->label('Hide Client Headers'),
-                        TextInput::make('lock_dictionary_name')
-                            ->label('Lock Dictionary Name')
-                            ->default('kong_locks')
-                            ->required(),
-                        TextInput::make('namespace')
-                            ->label('Namespace')
-                            ->required(),
-                        TextInput::make('path')
-                            ->label('Path'),
-                        TextInput::make('retry_after_jitter_max')
-                            ->label('Retry After Jitter Max')
-                            ->numeric(),
-                        Select::make('strategy')
-                            ->label('Strategy')
-                            ->options([
-                                'local' => 'local',
-                                'redis' => 'redis',
-                            ])
-                            ->default('local')
-                            ->required(),
-                        TextInput::make('sync_rate')
-                            ->label('Sync Rate')
-                            ->numeric(),
-                        Select::make('window_type')
-                            ->label('Window Type')
-                            ->options([
-                                'sliding' => 'sliding',
-                                'fixed' => 'fixed',
-                            ])
-                            ->default('sliding')
-                    ])->collapsed(),
-                Section::make('Plugin Configuration')
-                    ->description('Configuration parameters for this plugin. View advanced parameters for extended configuration.')
-                    ->visible(fn(Get $get) => $get('type_plugin') === 'basic_auth')
-                    ->schema([
-                        select::make('protocols')
-                            ->label('Protocols')
-                            ->multiple()
-                            ->searchable()
-                            ->hintIcon('heroicon-m-information-circle')
-                            ->hintIconTooltip('A list of the request protocols that will trigger this plugin. The default value, as well as the possible values allowed on this field, may change depending on the plugin type.')
-                            ->options([
-                                'grpc' => 'grpc',
-                                'grpcs' => 'grpcs',
-                                'http' => 'http',
-                                'https' => 'https',
-                                'ws' => 'ws',
-                                'wss' => 'wss',
-                            ]),
-                        Checkbox::make('credentials')
-                            ->label(' Hide Credentials')
-                            ->hintIcon('heroicon-m-information-circle')
-                            ->hintIconTooltip('An optional boolean value telling the plugin to show or hide the credential from the upstream service. If true, the plugin will strip the credential from the request (i.e. the Authorization header) before proxying it.'),
-                        TextInput::make('realm')
-                            ->label('Realm')
-                            ->default('service')
-                            ->placeholder('Default: service')
-                            ->hintIcon('heroicon-m-information-circle')
-                            ->hintIconTooltip('When authentication fails the plugin sends WWW-Authenticate header with realm attribute value.'),
-                    ])->collapsible(),
-                Section::make('View Advanced Paramenters')
-                    ->visible(fn(Get $get) => $get('type_plugin') === 'basic_auth')
-                    ->schema([
-                        TextInput::make('istance_name')
-                            ->label('Instance Name')
-                            ->hintIcon('heroicon-m-information-circle')
-                            ->hintIconTooltip('A custom name for this plugin instance to help identifying from the list view.')
-                            ->visible(fn(Get $get) => $get('type_plugin') === 'basic_auth'),
-                        TextInput::make('tags')
-                            ->label('Tags')
-                            ->placeholder('Enter list of tags')
-                            ->helperText('e.g. tag1, tag2, tag3')
-                            ->hintIcon('heroicon-m-information-circle')
-                            ->hintIconTooltip('An optional set of strings for grouping and filtering, separated by commas.')
-                            ->visible(fn(Get $get) => $get('type_plugin') === 'basic_auth'),
-                        TextInput::make('anonymouse')
-                            ->label('Anonymouse')
-                            ->hintIcon('heroicon-m-information-circle')
-                            ->hintIconTooltip('An optional string (Consumer UUID or username) value to use as an “anonymous” consumer if authentication fails. If empty (default null), the request will fail with an authentication failure 4xx. Please note that this value must refer to the Consumer id or username attribute, and not its custom_id.')
-                            ->visible(fn(Get $get) => $get('type_plugin') === 'basic_auth')
-                    ])->collapsed()
-            ]);
+                        ]),
+                ]);
     }
 
     public static function table(Table $table): Table
