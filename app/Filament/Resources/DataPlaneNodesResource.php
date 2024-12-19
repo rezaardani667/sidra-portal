@@ -54,6 +54,12 @@ class DataPlaneNodesResource extends Resource
                     ->schema([
                         TextInput::make('name')
                             ->label('Name')
+                            ->regex('/^\S*$/')
+                            ->validationMessages([
+                                'unique' => 'name - name (type: unique) constraint failed',
+                                'regex' => 'The name can be any string containing characters, letters, numbers, or the following characters: ., -, _, or ~. Do not use spaces.'
+                            ])
+                            ->unique(ignoreRecord: true)
                             ->placeholder('Enter a unique name')
                             ->required(),
                         Textarea::make('description')
@@ -106,6 +112,7 @@ class DataPlaneNodesResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\ViewAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -135,6 +142,7 @@ class DataPlaneNodesResource extends Resource
             'index' => Pages\ListDataPlaneNodes::route('/'),
             'create' => Pages\CreateDataPlaneNodes::route('/create'),
             'edit' => Pages\EditDataPlaneNodes::route('/{record}/edit'),
+            'view' => Pages\ViewDataPlaneNodes::route('/{record}'),
         ];
     }
 }

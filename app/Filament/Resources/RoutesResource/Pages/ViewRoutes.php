@@ -18,46 +18,43 @@ class ViewRoutes extends ViewRecord
 {
     protected static string $resource = RoutesResource::class;
 
-    public function mount(int | string $record): void
-    {
-        parent::mount($record);
-        static::$title = $this->getRecord()->name;
-    }
-
     public function infolist(Infolist $infolist): Infolist
     {
         return $infolist
             ->schema([
-                Section::make('About this Route')
+                Section::make(fn() => $this->getRecord()->name)
+                    ->description('About this Route')
                     ->schema([
                         TextEntry::make('id')
                             ->label('ID')
                             ->badge()
                             ->icon('heroicon-m-document-duplicate')
                             ->iconPosition(IconPosition::After)
+                            ->columnSpan(3)
                             ->copyable(),
                         TextEntry::make('tags')
                             ->label('Tags')
+                            ->inlineLabel()
                             ->badge()
+                            ->columns(1)
                             ->separator(','),
-                        Section::make('')
-                            ->description('This Route is attached to the following Gateway Service(s):')
-                            ->schema([
-                                TextEntry::make('gatewayService.name')
-                                    ->label('')
-                                    ->icon('heroicon-m-square-2-stack')
-                                    ->badge(),
-                                TextEntry::make('gatewayService.id')
-                                    ->label('Gateway Service ID')
-                                    ->badge()
-                                    ->inlineLabel()
-                                    ->icon('heroicon-m-document-duplicate')
-                                    ->iconPosition(IconPosition::After)
-                                    ->copyable(),
-                            ])
-                            ->columns(2)
+                        TextEntry::make('This Route is attached to the following Gateway Service(s):')
+                            ->columnSpanFull(),
+                        TextEntry::make('gatewayService.name')
+                            ->label('')
+                            ->icon('heroicon-m-square-2-stack')
+                            ->columns(1)
+                            ->badge(),
+                        TextEntry::make('gatewayService.id')
+                            ->label('Gateway Service ID')
+                            ->badge()
+                            ->inlineLabel()
+                            ->icon('heroicon-m-document-duplicate')
+                            ->iconPosition(IconPosition::After)
+                            ->columnSpan(3)
+                            ->copyable(),
                     ])
-                    ->columns(3),
+                    ->columns(6),
                 Tabs::make('Tabs')
                     ->tabs([
                         Tab::make('Analytics')
