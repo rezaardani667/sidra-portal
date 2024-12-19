@@ -17,22 +17,13 @@ class ViewGatewayServices extends ViewRecord
 {
     protected static string $resource = GatewayServicesResource::class;
 
-    public function mount(int | string $record): void
-    {
-        parent::mount($record);
-        static::$title = $this->getRecord()->name;
-    }
-
     public function infolist(Infolist $infolist): Infolist
     {
         return $infolist
             ->schema([
-                Section::make()
+                Section::make(fn() => $this->getRecord()->name)
+                    ->description('About this Gateway Service')
                     ->schema([
-                        TextEntry::make('About this Gateway Service')
-                            ->weight(FontWeight::Bold)
-                            ->size(TextEntry\TextEntrySize::Large)
-                            ->columnSpanFull(),
                         TextEntry::make('id')
                             ->label('ID')
                             ->badge()
