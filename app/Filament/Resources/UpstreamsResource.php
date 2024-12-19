@@ -31,6 +31,8 @@ class UpstreamsResource extends Resource
 
     public static function form(Form $form): Form
     {
+        //@todo: name, upstream host, upstream port dan model migration disesuaikan
+        // (Load balancing disimpan untuk back up)
         return $form
             ->schema([
                 Section::make('General Information')

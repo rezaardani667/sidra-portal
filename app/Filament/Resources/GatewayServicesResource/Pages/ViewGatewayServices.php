@@ -32,7 +32,7 @@ class ViewGatewayServices extends ViewRecord
                             ->icon('heroicon-m-document-duplicate')
                             ->iconPosition(IconPosition::After)
                             ->copyable(),
-                        TextEntry::make('host')
+                        TextEntry::make('domain')
                             ->label('Upstream URL')
                             ->badge()
                             ->icon('heroicon-m-document-duplicate')
@@ -71,8 +71,8 @@ class ViewGatewayServices extends ViewRecord
                         TextEntry::make('created_at')
                             ->label('Created')
                             ->inlineLabel(),
-                        TextEntry::make('host')
-                            ->label('Host')
+                        TextEntry::make('domain')
+                            ->label('Domain')
                             ->inlineLabel(),
                         TextEntry::make('protocol')
                             ->label('Protocol')

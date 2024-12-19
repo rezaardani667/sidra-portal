@@ -16,6 +16,7 @@ class DataPlaneNodes extends Model
         'name',
         'description',
         'deployment_models',
+        'status',
         'public_key',
         'private_key',
     ];

@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('name')->unique();
             $table->string('tags')->nullable();
             $table->string('protocol')->nullable();
-            $table->string('host')->nullable();
+            $table->string('domain')->nullable();
             $table->boolean('enabled')->default(true);
             $table->timestamps();
 

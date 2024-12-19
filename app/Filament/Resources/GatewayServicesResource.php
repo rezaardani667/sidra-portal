@@ -102,10 +102,10 @@ class GatewayServicesResource extends Resource
                                     'wss' => 'wss',
                                 ]
                             ]),
-                        TextInput::make('host')
-                            ->label('Host')
+                        TextInput::make('domain')
+                            ->label('Domain')
                             ->required()
-                            ->placeholder('Enter a host'),
+                            ->placeholder('Enter a domain'),
                         
                     ]),
 
@@ -159,8 +159,8 @@ class GatewayServicesResource extends Resource
                     ->weight(FontWeight::Bold),
                 TextColumn::make('protocol')
                     ->label('Protocol'),
-                TextColumn::make('host')
-                    ->label('Host'),
+                TextColumn::make('domain')
+                    ->label('Domain'),
                 ToggleColumn::make('enabled')
                     ->label('Enabled'),
                 TextColumn::make('tags')

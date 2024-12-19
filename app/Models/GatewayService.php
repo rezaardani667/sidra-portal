@@ -18,7 +18,7 @@ class GatewayService extends Model
         'name',
         'tags',
         'protocol',
-        'host',
+        'domain',
         'public_key',
         'connect_timeout',
         'read_timeout',

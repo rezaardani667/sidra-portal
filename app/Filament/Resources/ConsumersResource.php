@@ -32,6 +32,7 @@ class ConsumersResource extends Resource
     public static function form(Form $form): Form
     {
         return $form
+        //@todo: tagsnya dihapus saja, nanti consumer digunakan di plugin
             ->schema([
                 Section::make('General Information')
                     ->description('General information will help identify and manage added consumer.')

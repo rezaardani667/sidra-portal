@@ -48,6 +48,7 @@ class GatewayServiceController extends Controller
 
         $existingRecord->private_key= $keys['private_key'];
         $existingRecord->public_key = $keys['public_key'];
+        $existingRecord->status = 'active';
         $existingRecord->save();
 
         return response()->json([

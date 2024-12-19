@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('name')->unique();
             $table->string('description')->default('-');
             $table->string('deployment_models')->nullable();
+            $table->string('status')->default('inactive');
             $table->text('public_key')->nullable();
             $table->text('private_key')->nullable();
             $table->timestamps();

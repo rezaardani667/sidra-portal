@@ -74,9 +74,9 @@ class RoutesResource extends Resource
                     ->description('Route configuration determines how this route will handle incoming requests')
                     ->aside()
                     ->schema([
-                        TextInput::make('port')
-                            ->label('Port')
-                            ->numeric(),
+                        Select::make('upstream_url')
+                            ->label('Upstream Url'),
+                        //@Todo: option ambil dari upstream host+port (localhost:8080)
                         TextInput::make('paths')
                             ->regex('/\//')
                             ->validationMessages([
@@ -130,17 +130,6 @@ class RoutesResource extends Resource
                                             ])
                                             ->columns(2)
                                             ->visible(fn(Get $get) => $get('routing4') === true),
-                                        Toggle::make('routing5')
-                                            ->label('SNIs')
-                                            ->reactive()
-                                            ->default(false),
-                                        Repeater::make('snis')
-                                            ->simple(
-                                                TextInput::make('snis')
-                                            )
-                                            ->label('SNIs')
-                                            ->addActionLabel('Add SNIs')
-                                            ->visible(fn(Get $get) => $get('routing5') === true),
                                     ]),
                                 Tabs\Tab::make('Expressions')
                                     ->schema([
@@ -149,46 +138,46 @@ class RoutesResource extends Resource
                                             ->toolbarButtons([''])
                                     ]),
                             ]),
+                        Section::make('View Advanced Fields')
+                            ->schema([
+                                Select::make('path_handling')
+                                    ->label('Path Handling')
+                                    ->default('v0')
+                                    ->hintIcon('heroicon-m-information-circle')
+                                    ->hintIconTooltip('This treats service.path, route.path and request path as segments of a URL.')
+                                    ->options([
+                                        'v0' => 'v0',
+                                        'v1' => 'v1',
+                                    ]),
+                                Select::make('https_redirect_status_code')
+                                    ->label('HTTPS Redirect Status Code')
+                                    ->default('426')
+                                    ->options([
+                                        '426' => '426',
+                                        '301' => '301',
+                                        '302' => '302',
+                                        '307' => '307',
+                                        '308' => '308',
+                                    ]),
+                                TextInput::make('regex_priority')
+                                    ->label('Regex Priority')
+                                    ->numeric()
+                                    ->default('0'),
+                                Checkbox::make('strip_path')
+                                    ->label('Strip Path')
+                                    ->default(true),
+                                Checkbox::make('preserve_host')
+                                    ->label('Preserve Host'),
+                                Checkbox::make('request_buffering')
+                                    ->label('Request Buffering')
+                                    ->default(true),
+                                Checkbox::make('response_buffering')
+                                    ->label('Response Buffering')
+                                    ->default(true)
+                            ])
+                            ->collapsed(),
                     ]),
 
-                Section::make('View Advanced Fields')
-                    ->schema([
-                        Select::make('path_handling')
-                            ->label('Path Handling')
-                            ->default('v0')
-                            ->hintIcon('heroicon-m-information-circle')
-                            ->hintIconTooltip('This treats service.path, route.path and request path as segments of a URL.')
-                            ->options([
-                                'v0' => 'v0',
-                                'v1' => 'v1',
-                            ]),
-                        Select::make('https_redirect_status_code')
-                            ->label('HTTPS Redirect Status Code')
-                            ->default('426')
-                            ->options([
-                                '426' => '426',
-                                '301' => '301',
-                                '302' => '302',
-                                '307' => '307',
-                                '308' => '308',
-                            ]),
-                        TextInput::make('regex_priority')
-                            ->label('Regex Priority')
-                            ->numeric()
-                            ->default('0'),
-                        Checkbox::make('strip_path')
-                            ->label('Strip Path')
-                            ->default(true),
-                        Checkbox::make('preserve_host')
-                            ->label('Preserve Host'),
-                        Checkbox::make('request_buffering')
-                            ->label('Request Buffering')
-                            ->default(true),
-                        Checkbox::make('response_buffering')
-                            ->label('Response Buffering')
-                            ->default(true)
-                    ])
-                    ->collapsed()
 
             ]);
     }

@@ -23,30 +23,24 @@ class ViewDataPlaneNodes extends ViewRecord
                 Section::make('About This Serverless Gateway')
                     ->description('This is your serverless gateway control plane. It is the easiest way to get started with the Konnect Gateway.')
                     ->schema([
-                        TextEntry::make('proxy_url')
-                            ->label('Proxy URL:')
-                            ->badge()
-                            ->icon('heroicon-m-link')
-                            ->iconPosition(IconPosition::After)
-                            ->copyable(),
-                        TextEntry::make('admin_api')
-                            ->label('Admin API:')
-                            ->badge()
-                            ->icon('heroicon-m-terminal')
-                            ->iconPosition(IconPosition::After)
-                            ->copyable(),
                         TextEntry::make('id')
                             ->label('ID:')
                             ->badge()
                             ->icon('heroicon-m-document-duplicate')
                             ->iconPosition(IconPosition::After)
                             ->copyable(),
+                        TextEntry::make('status')
+                            ->label('Status:')
+                            ->badge()
+                            ->colors([
+                                'primary' => 'active',
+                                'danger' => 'inactive',
+                            ]),
                         TextEntry::make('created_at')
                             ->label('Created:')
-                            ->inlineLabel()
-                            ->formatStateUsing(fn ($state) => \Carbon\Carbon::parse($state)->timezone('Asia/Jakarta')->format('M j, Y, g:i A')),
+                            ->formatStateUsing(fn($state) => \Carbon\Carbon::parse($state)->timezone('Asia/Jakarta')->format('M j, Y, g:i A')),
                     ])
                     ->columns(3),
-                ]);
+            ]);
     }
 }

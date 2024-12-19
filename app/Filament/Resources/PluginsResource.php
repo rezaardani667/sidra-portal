@@ -45,6 +45,7 @@ class PluginsResource extends Resource
         return $form
             ->schema([
                 Section::make()
+                //@todo: type plugin ambil dari db (option), buat migration (type_plugin = id, name, config)
                     ->schema([
                         Select::make('type_plugin')
                             ->label('Plugin')
@@ -89,10 +90,11 @@ class PluginsResource extends Resource
                                 return [-1  => 'Any Routes'] + $routes;
                             })
                             ->default(-1),
+                        //@todo: tambah consumer bisa di input (select ambil dari consumer)
                         TextInput::make('name')
                             ->label('Name')
                             ->columns(1),
-
+                        //@todo: config ambil dari db sesuai yang di input foreach textinput
                         Section::make('Plugin Configuration')
                             ->description('Configuration parameters for this plugin. View advanced parameters for extended configuration.')
                             ->visible(fn(Get $get) => $get('type_plugin') === 'jwt')
