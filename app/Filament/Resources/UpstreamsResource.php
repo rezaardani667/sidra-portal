@@ -50,6 +50,7 @@ class UpstreamsResource extends Resource
                         TextInput::make('upstream_port')
                             ->label('Upstream Port')
                             ->placeholder('Enter the upstream port')
+                            ->numeric()
                             ->required(),
 
                         TextInput::make('client_certificate')

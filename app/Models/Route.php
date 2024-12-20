@@ -14,7 +14,6 @@ class Route extends Model
     protected $table = 'routes';
 
     protected $fillable = [
-        'name',
         'tags',
         'methods',
         'paths',

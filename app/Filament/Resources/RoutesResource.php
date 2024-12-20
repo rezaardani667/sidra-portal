@@ -45,16 +45,11 @@ class RoutesResource extends Resource
                     ->description('General information will help you identify and manage this route')
                     ->aside()
                     ->schema([
-                        TextInput::make('name')
-                            ->label('Name')
-                            ->required()
-                            ->regex('/^\S*$/')
+                        TextInput::make('paths')
+                            ->regex('/\//')
                             ->validationMessages([
-                                'unique' => 'name - name (type: unique) constraint failed',
-                                'regex' => 'The name can be any string containing characters, letters, numbers, or the following characters: ., -, _, or ~. Do not use spaces.'
-                            ])
-                            ->unique(ignoreRecord: true)
-                            ->placeholder('Enter a unique name'),
+                                'regex' => 'path - invalid path: must begin with `/` and should not include characters outside of the reserved list of RFC 3986'
+                            ]),
                         Select::make('gateway_id')
                             ->label('Service')
                             ->required()
@@ -81,11 +76,7 @@ class RoutesResource extends Resource
                                     return ["{$upstream->upstream_host}:{$upstream->upstream_port}" => "{$upstream->upstream_host}:{$upstream->upstream_port}"];
                                 })->toArray()
                             ),
-                        TextInput::make('paths')
-                            ->regex('/\//')
-                            ->validationMessages([
-                                'regex' => 'path - invalid path: must begin with `/` and should not include characters outside of the reserved list of RFC 3986'
-                            ]),
+
                         Select::make('path_type')
                             ->label('Path Type')
                             ->options([
@@ -190,16 +181,12 @@ class RoutesResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('name')
-                    ->label('Name')
-                    ->weight(FontWeight::Bold),
+                TextColumn::make('paths')
+                    ->label('Paths')
+                    ->badge()
+                    ->color('gray'),
                 TextColumn::make('gatewayService.protocol')
                     ->label('Protocols')
-                    ->badge()
-                    ->color('gray')
-                    ->separator(','),
-                TextColumn::make('gatewayService.host')
-                    ->label('Host')
                     ->badge()
                     ->color('gray')
                     ->separator(','),
@@ -207,16 +194,23 @@ class RoutesResource extends Resource
                     ->label('Methods')
                     ->badge()
                     ->separator(','),
-                TextColumn::make('paths')
-                    ->label('Paths')
-                    ->badge()
-                    ->color('gray'),
+                TextColumn::make('upstream_url')
+                    ->label('Upstream URL'),
                 TextColumn::make('expression')
                     ->label('Expression'),
                 TextColumn::make('tags')
                     ->label('Tags')
                     ->badge()
-                    ->separator(','),
+                    ->searchable()
+                    ->formatStateUsing(function ($state) {
+                        if (!$state) {
+                            return null;
+                        }
+                        $tags = explode(',', $state);
+                        $firstTag = $tags[0];
+                        $additionalCount = count($tags) - 1;
+                        return $additionalCount > 0 ? "{$firstTag} {$additionalCount}+" : $firstTag;
+                    }),
                 TextColumn::make('updated_at')
                     ->label('Last Modified')
                     ->dateTime('M d, Y, h:i A')

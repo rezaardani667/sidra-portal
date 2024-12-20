@@ -51,27 +51,16 @@ class PluginsResource extends Resource
                             ->label('Plugin')
                             ->searchable()
                             ->reactive()
-                            ->options(PluginType::all()->pluck('name', 'id')),
+                            ->options(PluginType::all()->pluck('name', 'name')),
                         Toggle::make('enabled')
                             ->label('This plugin is Enabled')
                             ->onIcon('heroicon-o-power')
                             ->offIcon('heroicon-o-power')
                             ->default(true),
-                        Radio::make('apply_to')
-                            ->label('Apply to')
-                            ->reactive()
-                            ->options([
-                                'service_routes' => 'Service and Routes',
-                                'consumer' => 'Consumer',
-                            ])
-                            ->default('service_routes')
-                            ->inline()
-                            ->inlineLabel(false),
                         Select::make('gatewayService')
                             ->label('Service')
                             ->placeholder('Select a service')
                             ->reactive()
-                            ->visible(fn(Get $get) => $get('apply_to') === 'service_routes')
                             ->options(function (Get $get) {
                                 $services = GatewayService::all()->mapWithKeys(function ($service) {
                                     return [$service->id => "{$service->name} - {$service->id}"];
@@ -85,7 +74,6 @@ class PluginsResource extends Resource
                         Select::make('routes')
                             ->label('Routes')
                             ->placeholder('Select a Routes')
-                            ->visible(fn(Get $get) => $get('apply_to') === 'service_routes')
                             ->options(function (Get $get) {
                                 $gatewayId = $get('gatewayService');
                                 $routes = Route::where('gateway_id', $gatewayId)->get()->mapWithKeys(function ($routes) {
@@ -97,9 +85,8 @@ class PluginsResource extends Resource
                         Select::make('consumers_id')
                             ->label('Consumer')
                             ->placeholder('Select a consumer')
-                            ->visible(fn(Get $get) => $get('apply_to') === 'consumer')
                             ->options(Consumer::all()->pluck('username', 'id')),
-                        TextInput::make('name')
+                        TextInput::make('name_plugin')
                             ->label('Name')
                             ->regex('/^\S*$/')
                             ->validationMessages([
@@ -117,7 +104,7 @@ class PluginsResource extends Resource
                             return collect($configs)->map(function ($config) use ($plugin_types) {
                                 return TextInput::make($config)
                                     ->label($config ?? ucfirst($config))
-                                    ->visible(fn(Get $get) => $get('type_plugin') === $plugin_types->id);
+                                    ->visible(fn(Get $get) => $get('type_plugin') === $plugin_types->name);
                             })->toArray();
                         })->flatten()->toArray(),
                     ]),
@@ -128,7 +115,7 @@ class PluginsResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('name')
+                TextColumn::make('name_plugin')
                     ->label('Name'),
                 TextColumn::make('type_plugin')
                     ->label('Plugin'),

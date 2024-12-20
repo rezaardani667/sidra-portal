@@ -67,7 +67,6 @@ class PluginTypeResource extends Resource
     {
         return [
             'index' => Pages\ListPluginTypes::route('/'),
-            'edit' => Pages\EditPluginType::route('/{record}/edit'),
         ];
     }
 }

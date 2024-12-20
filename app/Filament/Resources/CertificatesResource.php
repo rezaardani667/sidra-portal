@@ -55,9 +55,6 @@ class CertificatesResource extends Resource
                 ->label('Key Alt')
                 ->rows(6),
 
-            TextInput::make('snis')
-                ->label('SNIs')
-                ->placeholder('Enter a SNI'),
                 ]),
 
             Section::make('General Information')
@@ -86,8 +83,6 @@ class CertificatesResource extends Resource
                     ->label('Cert Alt'),
                 TextColumn::make('key_alt')
                     ->label('Key Alt'),
-                TextColumn::make('snis')
-                    ->label('SNIs'),
                 TextColumn::make('tags')
                     ->label('Tags')
             ])

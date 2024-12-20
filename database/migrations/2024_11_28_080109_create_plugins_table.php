@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('plugins', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->uuid('consumers_id')->nullable();
-            $table->string('name')->nullable();
+            $table->string('name_plugin')->nullable();
             $table->string('type_plugin')->nullable();
             $table->boolean('enabled')->nullable();
             $table->string('config')->nullable();

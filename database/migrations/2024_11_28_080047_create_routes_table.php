@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create('routes', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->uuid('gateway_id');
-            $table->string('name')->nullable();
             $table->string('tags')->nullable();
             $table->string('methods')->nullable();
             $table->string('paths')->nullable();

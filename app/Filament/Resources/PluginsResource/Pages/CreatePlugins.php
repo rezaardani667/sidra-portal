@@ -23,7 +23,7 @@ class CreatePlugins extends CreateRecord
 
     protected function getRedirectUrl(): string
     {
-        return $this->getResource()::getUrl('index');
+        return $this->getResource()::getUrl('view', ['record' => $this->record->id]);
     }
 
     protected function getFormActions(): array
@@ -56,10 +56,8 @@ class CreatePlugins extends CreateRecord
         $data['config'] = json_encode($configs);
 
         $plugin = parent::handleRecordCreation($data);
-
-        if ($data['apply_to'] === 'service_routes') {
-            $this->createServiceRoutes($plugin, $data);
-        }
+        
+        $this->createServiceRoutes($plugin, $data);
 
         return $plugin;
     }

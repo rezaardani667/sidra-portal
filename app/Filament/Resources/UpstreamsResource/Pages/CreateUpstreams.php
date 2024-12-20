@@ -13,6 +13,11 @@ class CreateUpstreams extends CreateRecord
     protected static ?string $title = 'New Upstream';
     protected ?string $subheading = 'The upstream object represents a virtual hostname and can be used to load balance incoming requests over multiple services (targets).';
 
+    protected function getRedirectUrl(): string
+    {
+        return $this->getResource()::getUrl('index');
+    }
+
     protected function getFormActions(): array
     {
         return [

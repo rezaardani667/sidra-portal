@@ -12,6 +12,11 @@ class EditConsumers extends EditRecord
     protected static ?string $title = 'New Consumer';
     protected ?string $subheading = 'A Consumer represents a User of a Service.';
 
+    protected function getRedirectUrl(): string
+    {
+        return $this->getResource()::getUrl('index');
+    }
+
     protected function getHeaderActions(): array
     {
         return [];

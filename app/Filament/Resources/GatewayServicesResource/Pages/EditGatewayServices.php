@@ -15,7 +15,7 @@ class EditGatewayServices extends EditRecord
 
     protected function getRedirectUrl(): string
     {
-        return $this->getResource()::getUrl('index');
+        return $this->getResource()::getUrl('view', ['record' => $this->record->id]);
     }
 
     protected function getHeaderActions(): array

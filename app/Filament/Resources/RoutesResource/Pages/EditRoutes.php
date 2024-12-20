@@ -14,6 +14,11 @@ class EditRoutes extends EditRecord
     protected static ?string $title = 'Edit Route';
     protected ?string $subheading = 'A Route defines rules to match client requests, and is associated with a Gateway Service.';
 
+    protected function getRedirectUrl(): string
+    {
+        return $this->getResource()::getUrl('view', ['record' => $this->record->id]);
+    }
+
     protected function getHeaderActions(): array
     {
         return [];

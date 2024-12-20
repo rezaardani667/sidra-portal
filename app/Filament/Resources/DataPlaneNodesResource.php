@@ -97,8 +97,6 @@ class DataPlaneNodesResource extends Resource
                     ->description(fn(DataPlaneNodes $record): string => $record->description),
                 TextColumn::make('deployment_models')
                     ->label('Type'),
-                TextColumn::make('data_plane_nodes')
-                    ->label('Data Plane Nodes'),
                 TextColumn::make('gatewayServices')
                     ->label('Services')
                     ->getStateUsing(fn(DataPlaneNodes $record): int => $record->gatewayServices()->count()),

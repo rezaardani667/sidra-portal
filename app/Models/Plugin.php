@@ -14,7 +14,7 @@ class Plugin extends Model
     protected $table = 'plugins';
 
     protected $fillable = [
-        'name',
+        'name_plugin',
         'type_plugin',
         'consumers_id',
         'enabled',
