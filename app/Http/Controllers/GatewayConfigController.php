@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Consumer;
 use App\Models\GatewayService;
 use App\Models\Plugin;
+use App\Models\PluginServiceRoute;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
@@ -17,114 +19,57 @@ class GatewayConfigController extends Controller
      */
     public function config($gateway_id)
     {
-        $gatewayService = $this->getGatewayService($gateway_id);
+        $gatewayService = GatewayService::find($gateway_id);
 
         if (!$gatewayService) {
-            return $this->gatewayNotFoundResponse();
+            return response()->json(['error' => 'Gateway not found'], Response::HTTP_NOT_FOUND);
         }
 
-        $routesWithPlugins = $this->getRoutesWithPlugins($gatewayService);
+        $plugins = Plugin::whereIn('id', function ($query) use ($gateway_id) {
+            $query->select('plugins_id')
+            ->from('plugin_service_route')
+            ->where('gateway_id', $gateway_id);
+        })->get();
 
-        return $this->successResponse($routesWithPlugins, $gatewayService);
-    }
+        $id = $plugins->pluck('id');
 
-    /**
-     * Retrieve the gateway service along with related routes, consumers, and plugins.
-     *
-     * @param int $gateway_id
-     * @return \App\Models\GatewayService|null
-     */
-    private function getGatewayService($gateway_id)
-    {
-        return GatewayService::with(['routes', 'consumers', 'plugins'])->find($gateway_id);
-    }
+        $consumers = Consumer::whereIn('id', function ($query) use ($id) {
+            $query->select('consumers_id')
+            ->from('plugins')
+            ->whereIn('id', $id);
+        })->get();
 
-    /**
-     * Return the 'gateway not found' response.
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    private function gatewayNotFoundResponse()
-    {
-        return response()->json([
-            'message' => 'Gateway service not found'
-        ], Response::HTTP_NOT_FOUND);
-    }
+        $routes = $gatewayService->routes->map(function ($route) {
 
-    /**
-     * Prepare the routes along with their plugins.
-     *
-     * @param \App\Models\GatewayService $gatewayService
-     * @return array
-     */
-    private function getRoutesWithPlugins($gatewayService)
-    {
-        $plugins = Plugin::whereIn('routes_id', $gatewayService->routes->pluck('id'))->get();
-
-        return $gatewayService->routes->map(function ($route) use ($plugins) {
-
-            $routePlugins = $plugins->where('routes_id', $route->id)->pluck('type_plugin')->values();
+            $plugins = Plugin::whereIn('id', function ($query) use ($route) {
+                $query->select('plugins_id')
+                    ->from('plugin_service_route')
+                    ->where('routes_id', $route->id);
+            })->pluck('type_plugin');
 
             return [
                 'id' => $route->id,
                 'gateway_id' => $route->gateway_id,
-                'name' => $route->name,
                 'tags' => $route->tags,
                 'methods' => $route->methods,
-                'upstream_host' => $route->gatewayService->name,
-                'upstream_port' => $route->port,
+                'upstream_host' => parse_url($route->upstream_url, PHP_URL_HOST),
+                'upstream_port' => parse_url($route->upstream_url, PHP_URL_PORT),
                 'path' => $route->paths,
-                'path_type' => $route->path_type,
+                'pathType' => $route->path_type,
                 'expression' => $route->expression,
                 'created_at' => $route->created_at,
                 'updated_at' => $route->updated_at,
-                'plugins' => $routePlugins
+                'plugins' => $plugins
             ];
-        })->toArray();
-    }
+        });
 
-    /**
-     * Return the success response with the routes, consumers, and plugins.
-     *
-     * @param array $routesWithPlugins
-     * @param \App\Models\GatewayService $gatewayService
-     * @return \Illuminate\Http\JsonResponse
-     */
-    private function successResponse($routesWithPlugins, $gatewayService)
-    {
         return response()->json([
             'GatewayService' => [
-                'host' => $gatewayService->host,
+                'host' => $gatewayService->domain
             ],
-            'Routes' => $routesWithPlugins,
-            'Consumers' => $gatewayService->consumers,
-            'Plugins' => $this->transformPlugins($gatewayService->plugins)
-        ]);
-    }
-
-    /**
-     * Transform the plugins to exclude unnecessary fields.
-     *
-     * @param \Illuminate\Database\Eloquent\Collection $plugins
-     * @return array
-     */
-    private function transformPlugins($plugins)
-    {
-        return $plugins->map(function ($plugin) {
-            
-            return [
-                'id' => $plugin->id,
-                'name' => $plugin->name,
-                'type_plugin' => $plugin->type_plugin,
-                'enabled' => $plugin->enabled,
-                'config' => $plugin->config,
-                'applied_to' => $plugin->applied_to,
-                'protocols' => $plugin->protocols,
-                'ordering' => $plugin->ordering,
-                'tags' => $plugin->tags,
-                'created_at' => $plugin->created_at,
-                'updated_at' => $plugin->updated_at
-            ];
-        })->toArray();
+            'Routes' => $routes,
+            'Plugins' => $plugins,
+            'Consumers' => $consumers
+        ], Response::HTTP_OK);
     }
 }

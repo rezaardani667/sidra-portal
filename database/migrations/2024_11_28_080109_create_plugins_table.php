@@ -19,7 +19,6 @@ return new class extends Migration
             $table->boolean('enabled')->nullable();
             $table->string('config')->nullable();
             $table->string('applied_to')->nullable();
-            $table->string('protocols')->nullable();
             $table->string('ordering')->default('Static');
             $table->string('tags')->default('-');
             $table->timestamps();

@@ -51,7 +51,7 @@ class PluginsResource extends Resource
                             ->label('Plugin')
                             ->searchable()
                             ->reactive()
-                            ->options(PluginType::all()->pluck('name', 'name')),
+                            ->options(PluginType::all()->pluck('name', 'id')),
                         Toggle::make('enabled')
                             ->label('This plugin is Enabled')
                             ->onIcon('heroicon-o-power')
@@ -77,7 +77,7 @@ class PluginsResource extends Resource
                             ->options(function (Get $get) {
                                 $gatewayId = $get('gatewayService');
                                 $routes = Route::where('gateway_id', $gatewayId)->get()->mapWithKeys(function ($routes) {
-                                    return [$routes->id => "{$routes->name} - {$routes->id}"];
+                                    return [$routes->id => "{$routes->paths} - {$routes->id}"];
                                 })->toArray();
                                 return [-1  => 'Any Routes'] + $routes;
                             })
@@ -104,7 +104,7 @@ class PluginsResource extends Resource
                             return collect($configs)->map(function ($config) use ($plugin_types) {
                                 return TextInput::make($config)
                                     ->label($config ?? ucfirst($config))
-                                    ->visible(fn(Get $get) => $get('type_plugin') === $plugin_types->name);
+                                    ->visible(fn(Get $get) => $get('type_plugin') === $plugin_types->id);
                             })->toArray();
                         })->flatten()->toArray(),
                     ]),
@@ -173,6 +173,11 @@ class PluginsResource extends Resource
 
     public static function setAppliedTo(Model $model): void
     {
+        //@todo: any service, any routes, consumer_id (Global).
+        //@todo: any service, any routes, null ().
+
+        //@todo: 1 service, any routes / 1 routes, consumer_id (Service, Routes, Consumer).
+        //@todo: 1 service, any routes / 1 routes, null (Service, Routes).
 
         if (!$model instanceof Plugin) {
             return;

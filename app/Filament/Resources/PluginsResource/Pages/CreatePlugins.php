@@ -55,6 +55,10 @@ class CreatePlugins extends CreateRecord
 
         $data['config'] = json_encode($configs);
 
+        if ($pluginType) {
+            $data['type_plugin'] = $pluginType->name;
+        }
+
         $plugin = parent::handleRecordCreation($data);
         
         $this->createServiceRoutes($plugin, $data);

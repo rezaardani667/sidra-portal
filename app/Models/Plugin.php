@@ -19,7 +19,6 @@ class Plugin extends Model
         'consumers_id',
         'enabled',
         'config',
-        'protocols',
         'gateway_id',
         'routes_id',
         'applied_to',
